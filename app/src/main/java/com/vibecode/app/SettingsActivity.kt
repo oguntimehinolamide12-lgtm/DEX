@@ -50,6 +50,7 @@ class SettingsActivity : AppCompatActivity() {
         binding.etCustom.setText(Prefs.apiKey("openai-compatible"))
         binding.etFontSize.setText(Prefs.fontSize().toString())
         binding.etTabSize.setText(Prefs.tabSize().toString())
+        binding.cbFileAccess.isChecked = Prefs.fileAccess()
 
         updateBaseUrlVisibility()
 
@@ -80,6 +81,7 @@ class SettingsActivity : AppCompatActivity() {
             Prefs.setApiKey("openai-compatible", binding.etCustom.text.toString().trim())
             binding.etFontSize.text.toString().toIntOrNull()?.let { Prefs.setFontSize(it) }
             binding.etTabSize.text.toString().toIntOrNull()?.let { Prefs.setTabSize(it) }
+            Prefs.setFileAccess(binding.cbFileAccess.isChecked)
             Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
             finish()
         }
