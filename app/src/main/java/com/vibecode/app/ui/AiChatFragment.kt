@@ -138,6 +138,7 @@ class AiChatFragment : Fragment() {
         adapter.notifyItemInserted(0)
     }
 
+    private fun applyToEditor(text: String) {
         val code = extractCode(text)
         (activity as? com.vibecode.app.MainActivity)?.applyToEditor(code)
         android.widget.Toast.makeText(requireContext(), "Applied to editor", android.widget.Toast.LENGTH_SHORT).show()
