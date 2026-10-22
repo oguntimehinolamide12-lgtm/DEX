@@ -1,4 +1,4 @@
-﻿package com.vibecode.app.ui
+package com.vibecode.app.ui
 
 import android.os.Bundle
 import android.view.Gravity

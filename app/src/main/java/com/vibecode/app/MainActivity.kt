@@ -1,4 +1,4 @@
-﻿package com.vibecode.app
+package com.vibecode.app
 
 import android.Manifest
 import android.content.Intent

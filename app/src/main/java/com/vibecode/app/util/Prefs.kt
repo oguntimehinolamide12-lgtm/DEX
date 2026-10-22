@@ -1,4 +1,4 @@
-﻿package com.vibecode.app.util
+package com.vibecode.app.util
 
 import android.content.Context
 import android.content.SharedPreferences

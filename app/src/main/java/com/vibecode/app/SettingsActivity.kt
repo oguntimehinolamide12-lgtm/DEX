@@ -1,4 +1,4 @@
-﻿package com.vibecode.app
+package com.vibecode.app
 
 import android.os.Bundle
 import android.view.View

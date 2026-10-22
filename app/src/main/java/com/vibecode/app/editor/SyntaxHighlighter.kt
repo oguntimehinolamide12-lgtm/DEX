@@ -1,4 +1,4 @@
-﻿package com.vibecode.app.editor
+package com.vibecode.app.editor
 
 import android.content.Context
 import android.text.Editable
