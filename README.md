@@ -1,4 +1,4 @@
-# VibeCode
+# DEX
 
 Lightweight Android code editor ("vibe coding") with an AI agent. Runs on low-end devices (2GB RAM).
 
