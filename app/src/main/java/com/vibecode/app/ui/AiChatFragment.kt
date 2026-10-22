@@ -46,6 +46,7 @@ class AiChatFragment : Fragment() {
         }
 
         binding.btnSend.setOnClickListener { send() }
+        binding.btnClear.setOnClickListener { clearChat() }
         binding.inputMessage.setOnEditorActionListener { _, _, _ -> send(); true }
     }
 
@@ -122,7 +123,21 @@ class AiChatFragment : Fragment() {
         return base + "\n\nDevice file access is enabled. Current folder: $folder\nFiles: ${files.joinToString(", ")}\n\nTool: to read a file's contents, output exactly [[READ_FILE:<absolute path>]] on its own line. The app will return the file contents. Use only paths from the listed files or the currently open file."
     }
 
-    private fun applyToEditor(text: String) {
+    private fun clearChat() {
+        messages.clear()
+        chat.clear()
+        adapter.notifyDataSetChanged()
+        val logo = """  ____  _____  __  __
+ |  _ \| ____| \ \/ /
+ | | | |  _|    \  /
+ | |_| | |___   /  \
+ |____/|_____| /_/\_\
+ 
+ Hi, I'm DEX — your coding buddy. Ask me anything!"""
+        chat.add("assistant" to logo)
+        adapter.notifyItemInserted(0)
+    }
+
         val code = extractCode(text)
         (activity as? com.vibecode.app.MainActivity)?.applyToEditor(code)
         android.widget.Toast.makeText(requireContext(), "Applied to editor", android.widget.Toast.LENGTH_SHORT).show()
