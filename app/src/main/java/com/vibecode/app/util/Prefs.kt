@@ -21,16 +21,16 @@ object Prefs {
     fun setTabSize(v: Int) = sp.edit().putInt("tabSize", v).apply()
     fun lastFolder() = sp.getString("lastFolder", "") ?: ""
     fun setLastFolder(v: String) = sp.edit().putString("lastFolder", v).apply()
-
     fun recentFiles(): List<String> = (sp.getString("recentFiles", "") ?: "").split("|").filter { it.isNotBlank() }
+
+
+
     fun addRecentFile(path: String) {
         val list = recentFiles().toMutableList()
         list.remove(path)
         list.add(0, path)
         sp.edit().putString("recentFiles", list.take(10).joinToString("|")).apply()
     }
-    fun lastFolder() = sp.getString("lastFolder", "") ?: ""
-    fun setLastFolder(path: String) = sp.edit().putString("lastFolder", path).apply()
 
 
     fun fileAccess() = sp.getBoolean("fileAccess", false)

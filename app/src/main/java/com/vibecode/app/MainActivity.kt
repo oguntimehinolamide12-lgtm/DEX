@@ -104,12 +104,11 @@ class MainActivity : AppCompatActivity() {
         val f = File(dir, "untitled.txt")
         f.writeText("")
         loadDir(dir)
-        ((binding.viewPager.adapter as ViewPagerAdapter).getFragment(0) as? EditorFragment)?.openFile(f)
+        editorFragment.openFile(f)
     }
 
     fun applyToEditor(text: String) {
         editorFragment.applyText(text)
-        binding.viewPager.currentItem = 0
     }
     private fun showRecent() {
         allFiles.clear()

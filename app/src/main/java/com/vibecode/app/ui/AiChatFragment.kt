@@ -102,8 +102,10 @@ class AiChatFragment : Fragment() {
         if (!Prefs.fileAccess()) return base
         val folder = Prefs.lastFolder()
         if (folder.isBlank()) return base
-        val dir = try { java.io.File(folder) } catch (_: Exception) { null }
-        val files = dir?.listFiles()?.map { it.name }?.take(80)
+        val files = try {
+            val d = java.io.File(folder)
+            if (d.isDirectory) d.listFiles()?.map { it.name }?.take(80) else null
+        } catch (_: Exception) { null }
         if (files.isNullOrEmpty()) return base
         return base + "\n\nDevice file access is enabled. Current folder: $folder\nFiles: ${files.joinToString(", ")}\n\nTool: to read a file's contents, output exactly [[READ_FILE:<absolute path>]] on its own line. The app will return the file contents. Use only paths from the listed files or the currently open file."
     }
