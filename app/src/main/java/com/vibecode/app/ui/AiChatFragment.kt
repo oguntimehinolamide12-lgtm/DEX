@@ -100,7 +100,7 @@ class AiChatFragment : Fragment() {
                 } else if (writeMatch != null && Prefs.fileAccess() && toolDepth < 3) {
                     toolDepth++
                     val path = writeMatch.groupValues[1].trim()
-                    val codeMatch = Regex("```[a-zA-Z0-9]*\n([\s\S]*?)```").find(reply.substring(writeMatch.range.last))
+                    val codeMatch = Regex("```[a-zA-Z0-9]*\n([\\s\\S]*?)```").find(reply.substring(writeMatch.range.last))
                     val content = codeMatch?.groupValues?.get(1) ?: ""
                     val ok = try {
                         val f = java.io.File(path)
