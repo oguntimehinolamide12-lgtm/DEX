@@ -53,14 +53,13 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.toolbar.setNavigationOnClickListener { toggleSidebar() }
 
-        val adapter = ViewPagerAdapter(this)
-        binding.viewPager.adapter = adapter
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, pos ->
-            tab.text = if (pos == 0) "Editor" else "DEX"
-        }.attach()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.editorContainer, editorFragment)
+            .replace(R.id.dexContainer, AiChatFragment())
+            .commit()
 
         fileAdapter = FileAdapter(files) { file ->
-                if (file.isDirectory) loadDir(file) else (adapter.getFragment(0) as? EditorFragment)?.openFile(file)
+                if (file.isDirectory) loadDir(file) else editorFragment.openFile(file)
         }
         binding.fileRecycler.layoutManager = LinearLayoutManager(this)
         binding.fileRecycler.adapter = fileAdapter
