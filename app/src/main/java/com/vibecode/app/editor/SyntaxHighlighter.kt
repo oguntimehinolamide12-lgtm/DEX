@@ -1,5 +1,7 @@
 package com.vibecode.app.editor
 
+import android.content.Context
+import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
@@ -50,8 +52,8 @@ object SyntaxHighlighter {
         applyRegex(editable, str, Regex("\\b\\d+(\\.\\d+)?\\b"), numberColor)
 
         if (keywords.isNotEmpty()) {
-            val flags = if (caseInsensitive) RegexOption.IGNORE_CASE else RegexOption.DEFAULT
-            val r = Regex("\\b(" + keywords.joinToString("|") { Regex.escape(it) } + ")\\b", flags)
+            val pattern = "\\b(" + keywords.joinToString("|") { Regex.escape(it) } + ")\\b"
+            val r = if (caseInsensitive) Regex(pattern, RegexOption.IGNORE_CASE) else Regex(pattern)
             applyRegex(editable, str, r, keywordColor)
         }
         applyRegex(editable, str, Regex("\\b(" + typeKeywords.joinToString("|") + ")\\b"), typeColor)
