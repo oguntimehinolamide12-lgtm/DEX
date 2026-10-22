@@ -3,72 +3,83 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:background="@color/background">
     <LinearLayout
-        android:id="@+id/sidebar"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/primary_dark">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp">
-            <Button android:id="@+id/btnOpenFolder" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/open_folder" android:textSize="11sp" />
-            <Button android:id="@+id/btnNewFile" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/new_file" android:textSize="11sp" />
-            <Button android:id="@+id/btnRecent" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Recent" android:textSize="11sp" />
-        </LinearLayout>
-        <EditText
-            android:id="@+id/etFileSearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Search files..."
-            android:textColor="@color/text"
-            android:textColorHint="@color/text_muted"
-            android:background="@color/surface"
-            android:padding="8dp" />
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/fileRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="4dp" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical">
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/surface"
-            app:title="@string/app_name"
-            app:titleTextColor="@color/text" />
+        android:orientation="horizontal">
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:id="@+id/sidebar"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/primary_dark">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp">
+                <Button android:id="@+id/btnOpenFolder" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/open_folder" android:textSize="11sp" />
+                <Button android:id="@+id/btnNewFile" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/new_file" android:textSize="11sp" />
+                <Button android:id="@+id/btnRecent" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Recent" android:textSize="11sp" />
+            </LinearLayout>
+            <EditText
+                android:id="@+id/etFileSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search files..."
+                android:textColor="@color/text"
+                android:textColorHint="@color/text_muted"
+                android:background="@color/surface"
+                android:padding="8dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fileRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="4dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="horizontal">
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/editorContainer"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-            <View
-                android:id="@+id/splitter"
-                android:layout_width="12dp"
-                android:layout_height="match_parent"
-                android:background="@color/surface_variant"
-                android:clickable="true"
-                android:focusable="true" />
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/dexContainer"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
+            android:orientation="vertical">
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/surface"
+                app:title="@string/app_name"
+                app:titleTextColor="@color/text" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/editorContainer"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+                <View
+                    android:id="@+id/splitter"
+                    android:layout_width="12dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/surface_variant"
+                    android:clickable="true"
+                    android:focusable="true" />
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/dexContainer"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/debugContainer"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:visibility="gone" />
 </LinearLayout>

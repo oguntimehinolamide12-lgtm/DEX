@@ -30,6 +30,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val editorFragment = EditorFragment()
+    private val debugFragment = com.vibecode.app.debug.DebugConsoleFragment()
+    private var debugVisible = false
     private val files = mutableListOf<File>()
     private val allFiles = mutableListOf<File>()
     private lateinit var fileAdapter: FileAdapter
@@ -44,9 +46,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Prefs.init(this)
+        val themeRes = when (Prefs.theme()) {
+            "light" -> com.vibecode.app.R.style.Theme_VibeCode_Light
+            "high_contrast" -> com.vibecode.app.R.style.Theme_VibeCode_HighContrast
+            "monokai" -> com.vibecode.app.R.style.Theme_VibeCode_Monokai
+            else -> com.vibecode.app.R.style.Theme_VibeCode
+        }
+        setTheme(themeRes)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        Prefs.init(this)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -131,6 +140,10 @@ class MainActivity : AppCompatActivity() {
     fun applyToEditor(text: String) {
         editorFragment.applyText(text)
     }
+
+    fun openFileInEditor(file: java.io.File) {
+        editorFragment.openFile(file)
+    }
     private fun showRecent() {
         allFiles.clear()
         for (p in Prefs.recentFiles()) allFiles.add(File(p))
@@ -161,6 +174,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menu.add(0, 1, 0, "Settings")
+        menu.add(0, 2, 1, "Debug")
         return true
     }
 
@@ -169,7 +183,22 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, SettingsActivity::class.java))
             return true
         }
+        if (item.itemId == 2) {
+            toggleDebug()
+            return true
+        }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun toggleDebug() {
+        debugVisible = !debugVisible
+        val container = binding.debugContainer
+        if (debugVisible) {
+            container.visibility = android.view.View.VISIBLE
+            supportFragmentManager.beginTransaction().replace(R.id.debugContainer, debugFragment).commit()
+        } else {
+            container.visibility = android.view.View.GONE
+        }
     }
 
     inner class ViewPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {

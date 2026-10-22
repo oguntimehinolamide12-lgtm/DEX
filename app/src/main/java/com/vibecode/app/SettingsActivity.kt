@@ -13,6 +13,8 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
 
     private val providers = arrayOf("openai", "anthropic", "gemini", "openai-compatible")
+    private val themes = arrayOf("dark", "light", "high_contrast", "monokai")
+    private val fonts = arrayOf("monospace", "sans", "serif")
 
     data class Preset(val name: String, val provider: String, val base: String, val model: String)
     private val presets = listOf(
@@ -29,14 +31,30 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Prefs.init(this)
+        val themeRes = when (Prefs.theme()) {
+            "light" -> com.vibecode.app.R.style.Theme_VibeCode_Light
+            "high_contrast" -> com.vibecode.app.R.style.Theme_VibeCode_HighContrast
+            "monokai" -> com.vibecode.app.R.style.Theme_VibeCode_Monokai
+            else -> com.vibecode.app.R.style.Theme_VibeCode
+        }
+        setTheme(themeRes)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        Prefs.init(this)
 
         binding.spinProvider.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, providers).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
         binding.spinProvider.setSelection(providers.indexOf(Prefs.provider()).coerceAtLeast(0))
+
+        binding.spinTheme.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, themes).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        binding.spinTheme.setSelection(themes.indexOf(Prefs.theme()).coerceAtLeast(0))
+        binding.spinFont.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, fonts).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        binding.spinFont.setSelection(fonts.indexOf(Prefs.fontFamily()).coerceAtLeast(0))
 
         binding.spinPreset.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, presets.map { it.name }).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -82,6 +100,8 @@ class SettingsActivity : AppCompatActivity() {
             binding.etFontSize.text.toString().toIntOrNull()?.let { Prefs.setFontSize(it) }
             binding.etTabSize.text.toString().toIntOrNull()?.let { Prefs.setTabSize(it) }
             Prefs.setFileAccess(binding.cbFileAccess.isChecked)
+            Prefs.setTheme(themes[binding.spinTheme.selectedItemPosition])
+            Prefs.setFontFamily(fonts[binding.spinFont.selectedItemPosition])
             Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
             finish()
         }

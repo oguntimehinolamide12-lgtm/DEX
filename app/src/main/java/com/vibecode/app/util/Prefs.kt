@@ -33,6 +33,10 @@ object Prefs {
     }
 
 
+    fun theme() = sp.getString("theme", "dark") ?: "dark"
+    fun setTheme(v: String) = sp.edit().putString("theme", v).apply()
+    fun fontFamily() = sp.getString("fontFamily", "monospace") ?: "monospace"
+    fun setFontFamily(v: String) = sp.edit().putString("fontFamily", v).apply()
     fun fileAccess() = sp.getBoolean("fileAccess", true)
     fun setFileAccess(v: Boolean) = sp.edit().putBoolean("fileAccess", v).apply()
 

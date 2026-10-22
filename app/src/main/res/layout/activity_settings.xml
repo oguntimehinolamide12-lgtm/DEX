@@ -38,6 +38,12 @@
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="OpenAI-compatible / Custom API Key" android:textColor="@color/text" android:layout_marginTop="12dp" />
         <EditText android:id="@+id/etCustom" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPassword" android:textColor="@color/text" android:hint="not needed for local Ollama" />
 
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Theme" android:textColor="@color/text" android:textStyle="bold" android:layout_marginTop="12dp" />
+        <Spinner android:id="@+id/spinTheme" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Font family" android:textColor="@color/text" android:textStyle="bold" android:layout_marginTop="12dp" />
+        <Spinner android:id="@+id/spinFont" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" />
+
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Font size" android:textColor="@color/text" android:layout_marginTop="12dp" />
         <EditText android:id="@+id/etFontSize" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:textColor="@color/text" />
 

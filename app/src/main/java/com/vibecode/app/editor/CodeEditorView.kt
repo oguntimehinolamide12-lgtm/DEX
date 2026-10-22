@@ -17,7 +17,12 @@ class CodeEditorView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : AppCompatEditText(context, attrs) {
 
-    private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private fun typefaceFor(name: String): Typeface = when (name) {
+        "sans" -> Typeface.SANS_SERIF
+        "serif" -> Typeface.SERIF
+        else -> Typeface.MONOSPACE
+    }
+private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = context.getColor(R.color.line_number)
         textSize = 12f * resources.displayMetrics.density
         typeface = Typeface.MONOSPACE
@@ -29,7 +34,8 @@ class CodeEditorView @JvmOverloads constructor(
     private var updating = false
 
     init {
-        typeface = Typeface.MONOSPACE
+        typeface = typefaceFor(Prefs.fontFamily())
+        linePaint.typeface = typeface
         textSize = Prefs.fontSize().toFloat()
         setHorizontallyScrolling(true)
         isVerticalScrollBarEnabled = true

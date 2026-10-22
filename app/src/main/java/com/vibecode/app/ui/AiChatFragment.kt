@@ -89,6 +89,8 @@ class AiChatFragment : Fragment() {
                 messages.add(ChatMessage("assistant", reply))
                 val readMatch = Regex("\\[\\[READ_FILE:(.+?)\\]\\]").find(reply)
                 val writeMatch = Regex("\\[\\[WRITE_FILE:(.+?)\\]\\]").find(reply)
+                val openMatch = Regex("\\[\\[OPEN_FILE:(.+?)\\]\\]").find(reply)
+                val applyMatch = Regex("\\[\\[APPLY_EDITOR\\]\\]").find(reply)
                 if (readMatch != null && Prefs.fileAccess() && toolDepth < 3) {
                     toolDepth++
                     val path = readMatch.groupValues[1].trim()
@@ -111,6 +113,26 @@ class AiChatFragment : Fragment() {
                     chat[idx] = "assistant" to (if (ok) "Wrote $path" else "Failed to write $path")
                     adapter.notifyItemChanged(idx)
                     messages.add(ChatMessage("user", "Tool result: ${if (ok) "Successfully wrote $path" else "Error writing $path"}"))
+                    runChat()
+                } else if (openMatch != null && Prefs.fileAccess() && toolDepth < 3) {
+                    toolDepth++
+                    val path = openMatch.groupValues[1].trim()
+                    try {
+                        (activity as? com.vibecode.app.MainActivity)?.openFileInEditor(java.io.File(path))
+                        chat[idx] = "assistant" to "Opened $path"
+                    } catch (e: Exception) {
+                        chat[idx] = "assistant" to "Failed to open $path"
+                    }
+                    adapter.notifyItemChanged(idx)
+                    messages.add(ChatMessage("user", "Tool result: opened $path"))
+                    runChat()
+                } else if (applyMatch != null && toolDepth < 3) {
+                    toolDepth++
+                    val code = extractCode(reply)
+                    (activity as? com.vibecode.app.MainActivity)?.applyToEditor(code)
+                    chat[idx] = "assistant" to "Applied to editor"
+                    adapter.notifyItemChanged(idx)
+                    messages.add(ChatMessage("user", "Tool result: applied code to editor"))
                     runChat()
                 } else {
                     chat[idx] = "assistant" to reply
@@ -136,7 +158,7 @@ class AiChatFragment : Fragment() {
             if (d.isDirectory) d.listFiles()?.map { it.name }?.take(80) else null
         } catch (_: Exception) { null }
         if (files.isNullOrEmpty()) return base
-        return base + "\n\nDevice file access is enabled. Current folder: $folder\nFiles: ${files.joinToString(", ")}\n\nTool: to read a file, output [[READ_FILE:<absolute path>]]. To write a file, output [[WRITE_FILE:<absolute path>]] followed by a code block with the content. Use only paths from the listed files or the currently open file."
+        return base + "\n\nDevice file access is enabled. Current folder: $folder\nFiles: ${files.joinToString(", ")}\n\nTools: to read a file, output [[READ_FILE:<absolute path>]]. To write a file, output [[WRITE_FILE:<absolute path>]] followed by a code block with the content. To open a file in the editor, output [[OPEN_FILE:<absolute path>]]. To apply a code block to the current editor buffer, output [[APPLY_EDITOR]] before the code block. Use only paths from the listed files or the currently open file."
     }
 
     private fun clearChat() {
