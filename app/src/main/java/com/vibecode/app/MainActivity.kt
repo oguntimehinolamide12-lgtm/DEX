@@ -79,6 +79,7 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+        fileAdapter = FileAdapter(files) { file ->
                 if (file.isDirectory) loadDir(file) else editorFragment.openFile(file)
         }
         binding.fileRecycler.layoutManager = LinearLayoutManager(this)
