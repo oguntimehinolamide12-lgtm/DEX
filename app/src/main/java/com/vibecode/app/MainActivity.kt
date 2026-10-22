@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding.toolbar.setNavigationOnClickListener { binding.drawerLayout.open() }
+        binding.toolbar.setNavigationOnClickListener { toggleSidebar() }
 
         val adapter = ViewPagerAdapter(this)
         binding.viewPager.adapter = adapter
@@ -60,8 +60,7 @@ class MainActivity : AppCompatActivity() {
         }.attach()
 
         fileAdapter = FileAdapter(files) { file ->
-            binding.drawerLayout.closeDrawers()
-            if (file.isDirectory) loadDir(file) else (adapter.getFragment(0) as? EditorFragment)?.openFile(file)
+                if (file.isDirectory) loadDir(file) else (adapter.getFragment(0) as? EditorFragment)?.openFile(file)
         }
         binding.fileRecycler.layoutManager = LinearLayoutManager(this)
         binding.fileRecycler.adapter = fileAdapter
@@ -116,7 +115,12 @@ class MainActivity : AppCompatActivity() {
         allFiles.clear()
         for (p in Prefs.recentFiles()) allFiles.add(File(p))
         applyFileFilter()
-        binding.drawerLayout.closeDrawers()
+    }
+
+    private var sidebarVisible = true
+    private fun toggleSidebar() {
+        sidebarVisible = !sidebarVisible
+        binding.sidebar.visibility = if (sidebarVisible) android.view.View.VISIBLE else android.view.View.GONE
     }
 
     private fun requestStoragePermissionIfNeeded() {
