@@ -130,16 +130,19 @@ class MainActivity : AppCompatActivity() {
 
     class FileAdapter(private val items: List<File>, private val onClick: (File) -> Unit) :
         androidx.recyclerview.widget.RecyclerView.Adapter<FileAdapter.VH>() {
-        class VH(val tv: android.widget.TextView) : androidx.recyclerview.widget.RecyclerView.ViewHolder(tv)
+        class VH(val root: android.view.View, val icon: android.widget.TextView, val name: android.widget.TextView) : androidx.recyclerview.widget.RecyclerView.ViewHolder(root)
         override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): VH {
-            val tv = android.view.LayoutInflater.from(parent.context).inflate(R.layout.item_file, parent, false) as android.widget.TextView
-            return VH(tv)
+            val root = android.view.LayoutInflater.from(parent.context).inflate(R.layout.item_file, parent, false)
+            val icon = root.findViewById<android.widget.TextView>(R.id.fileIcon)
+            val name = root.findViewById<android.widget.TextView>(R.id.fileName)
+            return VH(root, icon, name)
         }
         override fun getItemCount() = items.size
         override fun onBindViewHolder(holder: VH, position: Int) {
             val f = items[position]
-            holder.tv.text = if (f.isDirectory) "\uD83D\uDCC1 ${f.name}" else "\uD83D\uDCC4 ${f.name}"
-            holder.tv.setOnClickListener { onClick(f) }
+            holder.icon.text = if (f.isDirectory) "\uD83D\uDCC1" else "\uD83D\uDCC4"
+            holder.name.text = f.name
+            holder.root.setOnClickListener { onClick(f) }
         }
     }
 }

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#1E1E2E</color>
+    <color name="primary">#181825</color>
     <color name="primary_dark">#11111B</color>
     <color name="accent">#89B4FA</color>
     <color name="background">#1E1E2E</color>
     <color name="surface">#313244</color>
+    <color name="surface_variant">#45475A</color>
     <color name="text">#CDD6F4</color>
     <color name="text_secondary">#A6ADC8</color>
+    <color name="text_muted">#6C7086</color>
     <color name="keyword">#CBA6F7</color>
     <color name="string">#A6E3A1</color>
     <color name="comment">#6C7086</color>
@@ -14,4 +16,8 @@
     <color name="type">#89DCEB</color>
     <color name="line_number">#585B70</color>
     <color name="selection">#45475A</color>
+    <color name="bubble_user">#313244</color>
+    <color name="bubble_assistant">#181825</color>
+    <color name="success">#A6E3A1</color>
+    <color name="error">#F38BA8</color>
 </resources>

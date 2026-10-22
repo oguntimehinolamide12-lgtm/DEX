@@ -1,20 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    android:background="@color/background">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatRecycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
-
+        android:layout_weight="1"
+        android:padding="4dp"
+        android:clipToPadding="false" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="8dp">
+        android:gravity="center_vertical"
+        android:padding="8dp"
+        android:background="@color/surface">
         <EditText
             android:id="@+id/inputMessage"
             android:layout_width="0dp"
@@ -22,11 +25,15 @@
             android:layout_weight="1"
             android:hint="Ask the agent..."
             android:textColor="@color/text"
-            android:inputType="textMultiLine" />
+            android:textColorHint="@color/text_muted"
+            android:background="@android:color/transparent"
+            android:inputType="textMultiLine"
+            android:maxLines="4" />
         <Button
             android:id="@+id/btnSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/send" />
+            android:text="@string/send"
+            android:minHeight="36dp" />
     </LinearLayout>
 </LinearLayout>

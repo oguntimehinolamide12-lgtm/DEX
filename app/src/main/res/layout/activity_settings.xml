@@ -9,11 +9,19 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Provider" android:textColor="@color/text" />
-        <Spinner android:id="@+id/spinProvider" android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Provider" android:textColor="@color/text" android:textStyle="bold" />
+        <Spinner android:id="@+id/spinProvider" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" />
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Model" android:textColor="@color/text" android:layout_marginTop="12dp" />
-        <EditText android:id="@+id/etModel" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Model" android:textColor="@color/text" android:textStyle="bold" android:layout_marginTop="12dp" />
+        <EditText android:id="@+id/etModel" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text" android:hint="gpt-4o-mini" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilBaseUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+            <EditText android:id="@+id/etBaseUrl" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text" android:hint="Base URL (optional)" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="OpenAI API Key" android:textColor="@color/text" android:layout_marginTop="12dp" />
         <EditText android:id="@+id/etOpenAi" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPassword" android:textColor="@color/text" />
@@ -24,9 +32,18 @@
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Gemini API Key" android:textColor="@color/text" android:layout_marginTop="12dp" />
         <EditText android:id="@+id/etGemini" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPassword" android:textColor="@color/text" />
 
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="OpenAI-compatible / Custom API Key" android:textColor="@color/text" android:layout_marginTop="12dp" />
+        <EditText android:id="@+id/etCustom" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPassword" android:textColor="@color/text" android:hint="not needed for local Ollama" />
+
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Font size" android:textColor="@color/text" android:layout_marginTop="12dp" />
         <EditText android:id="@+id/etFontSize" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:textColor="@color/text" />
 
-        <Button android:id="@+id/btnSave" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Save" android:layout_marginTop="16dp" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tab size" android:textColor="@color/text" android:layout_marginTop="12dp" />
+        <EditText android:id="@+id/etTabSize" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:textColor="@color/text" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="16dp">
+            <Button android:id="@+id/btnTest" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Test connection" />
+            <Button android:id="@+id/btnSave" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Save" android:layout_marginStart="8dp" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

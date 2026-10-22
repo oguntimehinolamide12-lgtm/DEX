@@ -7,17 +7,22 @@ import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 
-class OpenAiProvider : AiProvider {
+class OpenAiProvider(private val baseUrl: String = "https://api.openai.com/v1") : AiProvider {
     override val name = "openai"
+
+    private fun endpoint(): String {
+        val b = baseUrl.trim().trimEnd('/')
+        return if (b.endsWith("/v1")) "$b/chat/completions" else "$b/v1/chat/completions"
+    }
 
     override fun chat(apiKey: String, model: String, messages: List<ChatMessage>, onToken: (String) -> Unit, onDone: () -> Unit, onError: (String) -> Unit) {
         Thread {
             var conn: HttpURLConnection? = null
             try {
-                val url = URL("https://api.openai.com/v1/chat/completions")
+                val url = URL(endpoint())
                 conn = (url.openConnection() as HttpURLConnection).apply {
                     requestMethod = "POST"
-                    setRequestProperty("Authorization", "Bearer $apiKey")
+                    if (apiKey.isNotBlank()) setRequestProperty("Authorization", "Bearer $apiKey")
                     setRequestProperty("Content-Type", "application/json")
                     doOutput = true
                     connectTimeout = 30000
@@ -34,7 +39,7 @@ class OpenAiProvider : AiProvider {
                 }
                 OutputStreamWriter(conn.outputStream).use { it.write(body.toString()) }
 
-                if (conn.responseCode != 200) {
+                if (conn.responseCode !in 200..299) {
                     val err = conn.errorStream?.bufferedReader()?.readText() ?: "HTTP ${conn.responseCode}"
                     onError(err)
                     return@Thread

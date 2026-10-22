@@ -20,6 +20,9 @@ object Prefs {
     fun model(): String = sp.getString("model", "gpt-4o-mini") ?: "gpt-4o-mini"
     fun setModel(m: String) = sp.edit().putString("model", m).apply()
 
+    fun baseUrl(): String = sp.getString("base_url", "") ?: ""
+    fun setBaseUrl(u: String) = sp.edit().putString("base_url", u.trim()).apply()
+
     fun lastFolder(): String = sp.getString("last_folder", "") ?: ""
     fun setLastFolder(f: String) = sp.edit().putString("last_folder", f).apply()
 
@@ -28,4 +31,7 @@ object Prefs {
 
     fun tabSize(): Int = sp.getInt("tab_size", 4)
     fun setTabSize(s: Int) = sp.edit().putInt("tab_size", s).apply()
+
+    fun theme(): String = sp.getString("theme", "dark") ?: "dark"
+    fun setTheme(t: String) = sp.edit().putString("theme", t).apply()
 }

@@ -1,11 +1,14 @@
 package com.vibecode.app.ui
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.vibecode.app.R
 import com.vibecode.app.ai.AiAgent
 import com.vibecode.app.ai.ChatMessage
 import com.vibecode.app.databinding.FragmentAiBinding
@@ -15,7 +18,7 @@ class AiChatFragment : Fragment() {
     private var _binding: FragmentAiBinding? = null
     private val binding get() = _binding!!
     private val messages = mutableListOf<ChatMessage>()
-    private val display = mutableListOf<String>()
+    private val chat = mutableListOf<Pair<String, String>>() // role, text
     private lateinit var adapter: MsgAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -24,48 +27,50 @@ class AiChatFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        adapter = MsgAdapter(display)
+        adapter = MsgAdapter(chat)
         binding.chatRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.chatRecycler.adapter = adapter
 
-        binding.btnSend.setOnClickListener {
-            val text = binding.inputMessage.text.toString().trim()
-            if (text.isEmpty()) return@setOnClickListener
-            binding.inputMessage.setText("")
-            messages.add(ChatMessage("user", text))
-            display.add("You: $text")
-            adapter.notifyItemInserted(display.size - 1)
-            binding.chatRecycler.scrollToPosition(display.size - 1)
+        binding.btnSend.setOnClickListener { send() }
+        binding.inputMessage.setOnEditorActionListener { _, _, _ -> send(); true }
+    }
 
-            // build full message list with system context
-            val sys = buildSystem()
-            val full = mutableListOf<ChatMessage>()
-            if (sys.isNotBlank()) full.add(ChatMessage("system", sys))
-            full.addAll(messages)
+    private fun send() {
+        val text = binding.inputMessage.text.toString().trim()
+        if (text.isEmpty()) return
+        binding.inputMessage.setText("")
+        messages.add(ChatMessage("user", text))
+        chat.add("user" to text)
+        adapter.notifyItemInserted(chat.size - 1)
+        binding.chatRecycler.scrollToPosition(chat.size - 1)
 
-            display.add("Assistant: ")
-            val idx = display.size - 1
-            adapter.notifyItemInserted(idx)
+        val sys = buildSystem()
+        val full = mutableListOf<ChatMessage>()
+        if (sys.isNotBlank()) full.add(ChatMessage("system", sys))
+        full.addAll(messages)
 
-            val sb = StringBuilder()
-            AiAgent.chat(full, { token ->
-                activity?.runOnUiThread {
-                    sb.append(token)
-                    display[idx] = "Assistant: $sb"
-                    adapter.notifyItemChanged(idx)
-                    binding.chatRecycler.scrollToPosition(idx)
-                }
-            }, {
-                activity?.runOnUiThread {
-                    messages.add(ChatMessage("assistant", sb.toString()))
-                }
-            }, { err ->
-                activity?.runOnUiThread {
-                    display[idx] = "Error: $err"
-                    adapter.notifyItemChanged(idx)
-                }
-            })
-        }
+        chat.add("assistant" to "")
+        val idx = chat.size - 1
+        adapter.notifyItemInserted(idx)
+
+        val sb = StringBuilder()
+        AiAgent.chat(full, { token ->
+            activity?.runOnUiThread {
+                sb.append(token)
+                chat[idx] = "assistant" to sb.toString()
+                adapter.notifyItemChanged(idx)
+                binding.chatRecycler.scrollToPosition(idx)
+            }
+        }, {
+            activity?.runOnUiThread {
+                messages.add(ChatMessage("assistant", sb.toString()))
+            }
+        }, { err ->
+            activity?.runOnUiThread {
+                chat[idx] = "assistant" to "Error: $err"
+                adapter.notifyItemChanged(idx)
+            }
+        })
     }
 
     private fun buildSystem(): String {
@@ -79,16 +84,28 @@ class AiChatFragment : Fragment() {
         _binding = null
     }
 
-    class MsgAdapter(private val items: List<String>) :
+    class MsgAdapter(private val items: List<Pair<String, String>>) :
         androidx.recyclerview.widget.RecyclerView.Adapter<MsgAdapter.VH>() {
-        class VH(val tv: android.widget.TextView) : androidx.recyclerview.widget.RecyclerView.ViewHolder(tv)
+        class VH(val root: android.view.View, val tv: android.widget.TextView) : androidx.recyclerview.widget.RecyclerView.ViewHolder(root)
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-            val tv = LayoutInflater.from(parent.context).inflate(com.vibecode.app.R.layout.item_message, parent, false) as android.widget.TextView
-            return VH(tv)
+            val root = LayoutInflater.from(parent.context).inflate(R.layout.item_message, parent, false)
+            val tv = root.findViewById<TextView>(R.id.messageText)
+            return VH(root, tv)
         }
         override fun getItemCount() = items.size
         override fun onBindViewHolder(holder: VH, position: Int) {
-            holder.tv.text = items[position]
+            val (role, text) = items[position]
+            holder.tv.text = text.ifEmpty { "…" }
+            val lp = holder.tv.layoutParams as? android.widget.LinearLayout.LayoutParams
+            if (role == "user") {
+                holder.tv.setBackgroundResource(R.drawable.bubble_user)
+                holder.tv.gravity = Gravity.START
+                (holder.root as? android.widget.LinearLayout)?.gravity = Gravity.END
+            } else {
+                holder.tv.setBackgroundResource(R.drawable.bubble_assistant)
+                holder.tv.gravity = Gravity.START
+                (holder.root as? android.widget.LinearLayout)?.gravity = Gravity.START
+            }
         }
     }
 }
