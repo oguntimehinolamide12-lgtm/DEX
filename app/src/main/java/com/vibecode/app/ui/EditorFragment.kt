@@ -1,4 +1,4 @@
-package com.vibecode.app.ui
+﻿package com.vibecode.app.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,6 +12,7 @@ import com.vibecode.app.fs.FileManager
 import com.vibecode.app.util.Prefs
 import java.io.File
 
+
 class EditorFragment : Fragment() {
     private var _binding: FragmentEditorBinding? = null
     private val binding get() = _binding!!
@@ -24,6 +25,9 @@ class EditorFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.btnSave.setOnClickListener { save() }
+        binding.btnFind.setOnClickListener { findNext() }
+        binding.btnReplace.setOnClickListener { replaceOne() }
+        binding.btnGoto.setOnClickListener { gotoLine() }
     }
 
     fun openFile(file: File) {
@@ -34,6 +38,12 @@ class EditorFragment : Fragment() {
         binding.editor.setLanguage(FileManager.languageFor(file))
         com.vibecode.app.util.CurrentFile.path = file.absolutePath
         com.vibecode.app.util.CurrentFile.content = content
+        Prefs.addRecentFile(file.absolutePath)
+    }
+
+    fun applyText(text: String) {
+        binding.editor.setText(text)
+        com.vibecode.app.util.CurrentFile.content = text
     }
 
     private fun save() {
@@ -42,6 +52,53 @@ class EditorFragment : Fragment() {
         val ok = FileManager.writeText(f, text)
         com.vibecode.app.util.CurrentFile.content = text
         Toast.makeText(requireContext(), if (ok) "Saved" else "Error saving", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun findNext() {
+        val q = binding.etSearch.text.toString()
+        if (q.isEmpty()) return
+        val ed = binding.editor
+        val text = ed.text?.toString() ?: return
+        val start = (ed.selectionEnd).coerceAtLeast(0)
+        val idx = text.indexOf(q, start)
+        val found = if (idx >= 0) idx else text.indexOf(q)
+        if (found >= 0) {
+            ed.setSelection(found, found + q.length)
+            ed.requestFocus()
+        } else {
+            Toast.makeText(requireContext(), "Not found", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun replaceOne() {
+        val q = binding.etSearch.text.toString()
+        val r = binding.etReplace.text.toString()
+        if (q.isEmpty()) return
+        val ed = binding.editor
+        val s = ed.selectionStart
+        val e = ed.selectionEnd
+        if (s >= 0 && e > s && ed.text?.substring(s, e) == q) {
+            ed.text?.replace(s, e, r)
+        } else {
+            findNext()
+            val s2 = ed.selectionStart
+            val e2 = ed.selectionEnd
+            if (s2 >= 0 && e2 > s2 && ed.text?.substring(s2, e2) == q) {
+                ed.text?.replace(s2, e2, r)
+            }
+        }
+    }
+
+    private fun gotoLine() {
+        val n = binding.etGoto.text.toString().toIntOrNull() ?: return
+        val ed = binding.editor
+        val text = ed.text?.toString() ?: return
+        val lines = text.split('\n')
+        if (n < 1 || n > lines.size) return
+        var pos = 0
+        for (i in 0 until n - 1) pos += lines[i].length + 1
+        ed.setSelection(pos)
+        ed.requestFocus()
     }
 
     override fun onDestroyView() {

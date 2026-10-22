@@ -85,6 +85,33 @@ class CodeEditorView @JvmOverloads constructor(
             text?.replace(start, end, " ".repeat(Prefs.tabSize()))
             return true
         }
+        // auto-pair
+        val ch = event?.unicodeChar?.toChar()
+        val pairs = mapOf('(' to ')', '{' to '}', '[' to ']', '"' to '"', '\'' to '\'')
+        if (ch != null && pairs.containsKey(ch)) {
+            val start = selectionStart
+            val end = selectionEnd
+            val closing = pairs[ch]!!
+            if (start == end) {
+                text?.insert(start, "$ch$closing")
+                setSelection(start + 1)
+                return true
+            } else {
+                // wrap selection
+                val selected = text?.substring(start, end) ?: ""
+                text?.replace(start, end, "$ch$selected$closing")
+                setSelection(start + 1, start + 1 + selected.length)
+                return true
+            }
+        }
+        // skip over closing bracket if already there
+        if (ch != null && (ch == ')' || ch == '}' || ch == ']' || ch == '"' || ch == '\'')) {
+            val start = selectionStart
+            if (start < (text?.length ?: 0) && text?.get(start) == ch) {
+                setSelection(start + 1)
+                return true
+            }
+        }
         return super.onKeyDown(keyCode, event)
     }
 }

@@ -8,26 +8,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="8dp"
+        android:padding="4dp"
         android:background="@color/surface">
-        <TextView
-            android:id="@+id/fileTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/no_file_open"
-            android:textColor="@color/text"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:ellipsize="end"
-            android:maxLines="1" />
-        <Button
-            android:id="@+id/btnSave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/save"
-            android:minHeight="36dp" />
+        <TextView android:id="@+id/fileTitle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:textColor="@color/text" android:textStyle="bold" android:padding="8dp" />
+        <Button android:id="@+id/btnSave" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/save" android:minHeight="36dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        android:background="@color/surface">
+        <EditText android:id="@+id/etSearch" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="Find..." android:textColor="@color/text" android:textColorHint="@color/text_muted" />
+        <EditText android:id="@+id/etReplace" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="Replace..." android:textColor="@color/text" android:textColorHint="@color/text_muted" />
+        <Button android:id="@+id/btnFind" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Find" android:minHeight="32dp" />
+        <Button android:id="@+id/btnReplace" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Repl" android:minHeight="32dp" />
+        <EditText android:id="@+id/etGoto" android:layout_width="48dp" android:layout_height="wrap_content" android:hint="Ln" android:inputType="number" android:textColor="@color/text" />
+        <Button android:id="@+id/btnGoto" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Go" android:minHeight="32dp" />
     </LinearLayout>
     <com.vibecode.app.editor.CodeEditorView
         android:id="@+id/editor"
@@ -35,8 +32,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/background"
-        android:gravity="top|start"
-        android:inputType="textMultiLine|textNoSuggestions"
-        android:scrollbars="vertical|horizontal"
-        android:padding="4dp" />
+        android:padding="4dp"
+        android:textColor="@color/text"
+        android:textSize="13sp" />
 </LinearLayout>

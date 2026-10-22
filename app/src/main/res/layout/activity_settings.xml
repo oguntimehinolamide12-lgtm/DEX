@@ -9,7 +9,10 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Provider" android:textColor="@color/text" android:textStyle="bold" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Preset" android:textColor="@color/text" android:textStyle="bold" />
+        <Spinner android:id="@+id/spinPreset" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Provider" android:textColor="@color/text" android:textStyle="bold" android:layout_marginTop="12dp" />
         <Spinner android:id="@+id/spinProvider" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" />
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Model" android:textColor="@color/text" android:textStyle="bold" android:layout_marginTop="12dp" />

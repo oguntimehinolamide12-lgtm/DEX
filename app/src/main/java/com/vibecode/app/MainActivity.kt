@@ -29,7 +29,9 @@ import java.io.File
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val editorFragment = EditorFragment()
     private val files = mutableListOf<File>()
+    private val allFiles = mutableListOf<File>()
     private lateinit var fileAdapter: FileAdapter
     private var currentDir: File? = null
 
@@ -63,9 +65,15 @@ class MainActivity : AppCompatActivity() {
         }
         binding.fileRecycler.layoutManager = LinearLayoutManager(this)
         binding.fileRecycler.adapter = fileAdapter
+        binding.etFileSearch.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { applyFileFilter() }
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
 
         binding.btnOpenFolder.setOnClickListener { openFolderLauncher.launch(null) }
         binding.btnNewFile.setOnClickListener { newFile() }
+        binding.btnRecent.setOnClickListener { showRecent() }
 
         val last = Prefs.lastFolder()
         if (last.isEmpty()) {
@@ -79,9 +87,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadDir(dir: File) {
         currentDir = dir
+        allFiles.clear()
+        if (dir.parentFile != null) allFiles.add(dir.parentFile!!)
+        allFiles.addAll(FileManager.listDir(dir))
+        applyFileFilter()
+    }
+    private fun applyFileFilter() {
+        val q = binding.etFileSearch.text?.toString()?.trim()?.lowercase() ?: ""
         files.clear()
-        if (dir.parentFile != null) files.add(dir.parentFile!!)
-        files.addAll(FileManager.listDir(dir))
+        for (f in allFiles) {
+            if (q.isEmpty() || f.name.lowercase().contains(q)) files.add(f)
+        }
         fileAdapter.notifyDataSetChanged()
     }
     private fun newFile() {
@@ -90,6 +106,17 @@ class MainActivity : AppCompatActivity() {
         f.writeText("")
         loadDir(dir)
         ((binding.viewPager.adapter as ViewPagerAdapter).getFragment(0) as? EditorFragment)?.openFile(f)
+    }
+
+    fun applyToEditor(text: String) {
+        editorFragment.applyText(text)
+        binding.viewPager.currentItem = 0
+    }
+    private fun showRecent() {
+        allFiles.clear()
+        for (p in Prefs.recentFiles()) allFiles.add(File(p))
+        applyFileFilter()
+        binding.drawerLayout.closeDrawers()
     }
 
     private fun requestStoragePermissionIfNeeded() {
@@ -122,7 +149,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     inner class ViewPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
-        private val fragments = listOf(EditorFragment(), AiChatFragment())
+        private val fragments = listOf(editorFragment, AiChatFragment())
         override fun getItemCount() = fragments.size
         override fun createFragment(position: Int): Fragment = fragments[position]
         fun getFragment(position: Int): Fragment? = fragments.getOrNull(position)

@@ -1,4 +1,4 @@
-package com.vibecode.app
+﻿package com.vibecode.app
 
 import android.os.Bundle
 import android.view.View
@@ -8,10 +8,24 @@ import androidx.appcompat.app.AppCompatActivity
 import com.vibecode.app.databinding.ActivitySettingsBinding
 import com.vibecode.app.util.Prefs
 
+
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
 
     private val providers = arrayOf("openai", "anthropic", "gemini", "openai-compatible")
+
+    data class Preset(val name: String, val provider: String, val base: String, val model: String)
+    private val presets = listOf(
+        Preset("OpenAI (GPT-4o-mini)", "openai", "https://api.openai.com/v1", "gpt-4o-mini"),
+        Preset("Anthropic (Claude 3.5 Haiku)", "anthropic", "", "claude-3-5-haiku-latest"),
+        Preset("Gemini (1.5 Flash)", "gemini", "", "gemini-1.5-flash"),
+        Preset("Ollama (local)", "openai-compatible", "http://10.0.2.2:11434/v1", "llama3.1"),
+        Preset("LM Studio (local)", "openai-compatible", "http://10.0.2.2:1234/v1", "local-model"),
+        Preset("Groq (Llama 3.3)", "openai-compatible", "https://api.groq.com/openai/v1", "llama-3.3-70b-versatile"),
+        Preset("OpenRouter", "openai-compatible", "https://openrouter.ai/api/v1", "openai/gpt-4o-mini"),
+        Preset("Together AI", "openai-compatible", "https://api.together.xyz/v1", "meta-llama/Llama-3.3-70B-Instruct-Turbo"),
+        Preset("Custom endpoint", "openai-compatible", "", "")
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +37,10 @@ class SettingsActivity : AppCompatActivity() {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
         binding.spinProvider.setSelection(providers.indexOf(Prefs.provider()).coerceAtLeast(0))
+
+        binding.spinPreset.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, presets.map { it.name }).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
 
         binding.etModel.setText(Prefs.model())
         binding.etBaseUrl.setText(Prefs.baseUrl())
@@ -37,6 +55,17 @@ class SettingsActivity : AppCompatActivity() {
 
         binding.spinProvider.setOnItemSelectedListener(object : android.widget.AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) { updateBaseUrlVisibility() }
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
+        })
+
+        binding.spinPreset.setOnItemSelectedListener(object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val pr = presets[position]
+                binding.spinProvider.setSelection(providers.indexOf(pr.provider).coerceAtLeast(0))
+                if (pr.base.isNotBlank()) binding.etBaseUrl.setText(pr.base)
+                if (pr.model.isNotBlank()) binding.etModel.setText(pr.model)
+                updateBaseUrlVisibility()
+            }
             override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
         })
 
@@ -60,7 +89,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun updateBaseUrlVisibility() {
         val custom = binding.spinProvider.selectedItemPosition == providers.indexOf("openai-compatible")
-        binding.tilBaseUrl.visibility = if (custom) View.VISIBLE else View.VISIBLE
+        binding.tilBaseUrl.visibility = View.VISIBLE
         binding.etBaseUrl.hint = if (custom) "http://10.0.2.2:11434/v1 (Ollama)" else "https://api.openai.com/v1 (optional override)"
     }
 

@@ -1,37 +1,32 @@
-package com.vibecode.app.util
+﻿package com.vibecode.app.util
 
 import android.content.Context
 import android.content.SharedPreferences
 
 object Prefs {
-    private const val NAME = "vibecode_prefs"
     private lateinit var sp: SharedPreferences
+    fun init(ctx: Context) { sp = ctx.getSharedPreferences("vibecode", Context.MODE_PRIVATE) }
 
-    fun init(ctx: Context) {
-        sp = ctx.applicationContext.getSharedPreferences(NAME, Context.MODE_PRIVATE)
+    fun provider() = sp.getString("provider", "openai") ?: "openai"
+    fun setProvider(v: String) = sp.edit().putString("provider", v).apply()
+    fun model() = sp.getString("model", "") ?: ""
+    fun setModel(v: String) = sp.edit().putString("model", v).apply()
+    fun baseUrl() = sp.getString("baseUrl", "") ?: ""
+    fun setBaseUrl(v: String) = sp.edit().putString("baseUrl", v).apply()
+    fun apiKey(p: String) = sp.getString("key_$p", "") ?: ""
+    fun setApiKey(p: String, v: String) = sp.edit().putString("key_$p", v).apply()
+    fun fontSize() = sp.getInt("fontSize", 14)
+    fun setFontSize(v: Int) = sp.edit().putInt("fontSize", v).apply()
+    fun tabSize() = sp.getInt("tabSize", 4).coerceIn(1, 8)
+    fun setTabSize(v: Int) = sp.edit().putInt("tabSize", v).apply()
+    fun lastFolder() = sp.getString("lastFolder", "") ?: ""
+    fun setLastFolder(v: String) = sp.edit().putString("lastFolder", v).apply()
+
+    fun recentFiles(): List<String> = (sp.getString("recentFiles", "") ?: "").split("|").filter { it.isNotBlank() }
+    fun addRecentFile(path: String) {
+        val list = recentFiles().toMutableList()
+        list.remove(path)
+        list.add(0, path)
+        sp.edit().putString("recentFiles", list.take(10).joinToString("|")).apply()
     }
-
-    fun apiKey(provider: String): String = sp.getString("key_$provider", "") ?: ""
-    fun setApiKey(provider: String, key: String) = sp.edit().putString("key_$provider", key).apply()
-
-    fun provider(): String = sp.getString("provider", "openai") ?: "openai"
-    fun setProvider(p: String) = sp.edit().putString("provider", p).apply()
-
-    fun model(): String = sp.getString("model", "gpt-4o-mini") ?: "gpt-4o-mini"
-    fun setModel(m: String) = sp.edit().putString("model", m).apply()
-
-    fun baseUrl(): String = sp.getString("base_url", "") ?: ""
-    fun setBaseUrl(u: String) = sp.edit().putString("base_url", u.trim()).apply()
-
-    fun lastFolder(): String = sp.getString("last_folder", "") ?: ""
-    fun setLastFolder(f: String) = sp.edit().putString("last_folder", f).apply()
-
-    fun fontSize(): Int = sp.getInt("font_size", 13)
-    fun setFontSize(s: Int) = sp.edit().putInt("font_size", s).apply()
-
-    fun tabSize(): Int = sp.getInt("tab_size", 4)
-    fun setTabSize(s: Int) = sp.edit().putInt("tab_size", s).apply()
-
-    fun theme(): String = sp.getString("theme", "dark") ?: "dark"
-    fun setTheme(t: String) = sp.edit().putString("theme", t).apply()
 }

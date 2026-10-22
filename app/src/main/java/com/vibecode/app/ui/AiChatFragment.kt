@@ -1,4 +1,4 @@
-package com.vibecode.app.ui
+﻿package com.vibecode.app.ui
 
 import android.os.Bundle
 import android.view.Gravity
@@ -14,11 +14,12 @@ import com.vibecode.app.ai.ChatMessage
 import com.vibecode.app.databinding.FragmentAiBinding
 import com.vibecode.app.util.CurrentFile
 
+
 class AiChatFragment : Fragment() {
     private var _binding: FragmentAiBinding? = null
     private val binding get() = _binding!!
     private val messages = mutableListOf<ChatMessage>()
-    private val chat = mutableListOf<Pair<String, String>>() // role, text
+    private val chat = mutableListOf<Pair<String, String>>()
     private lateinit var adapter: MsgAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -27,7 +28,7 @@ class AiChatFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        adapter = MsgAdapter(chat)
+        adapter = MsgAdapter(chat) { text -> applyToEditor(text) }
         binding.chatRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.chatRecycler.adapter = adapter
 
@@ -79,32 +80,49 @@ class AiChatFragment : Fragment() {
         return "You are a helpful coding assistant inside a mobile code editor. The user is editing file: ${cf.path}. Current file content:\n```\n${cf.content.take(8000)}\n```\nAnswer concisely and provide code when useful."
     }
 
+    private fun applyToEditor(text: String) {
+        val code = extractCode(text)
+        (activity as? com.vibecode.app.MainActivity)?.applyToEditor(code)
+        android.widget.Toast.makeText(requireContext(), "Applied to editor", android.widget.Toast.LENGTH_SHORT).show()
+    }
+
+    private fun extractCode(text: String): String {
+        val fence = Regex("```[a-zA-Z0-9]*\\n([\\s\\S]*?)```")
+        val m = fence.find(text)
+        return m?.groupValues?.get(1)?.trim() ?: text
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    class MsgAdapter(private val items: List<Pair<String, String>>) :
+    class MsgAdapter(private val items: List<Pair<String, String>>, private val onApply: (String) -> Unit) :
         androidx.recyclerview.widget.RecyclerView.Adapter<MsgAdapter.VH>() {
-        class VH(val root: android.view.View, val tv: android.widget.TextView) : androidx.recyclerview.widget.RecyclerView.ViewHolder(root)
+        class VH(val root: android.view.View, val tv: android.widget.TextView, val btn: android.widget.Button) : androidx.recyclerview.widget.RecyclerView.ViewHolder(root)
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
             val root = LayoutInflater.from(parent.context).inflate(R.layout.item_message, parent, false)
             val tv = root.findViewById<TextView>(R.id.messageText)
-            return VH(root, tv)
+            val btn = root.findViewById<android.widget.Button>(R.id.btnApply)
+            return VH(root, tv, btn)
         }
         override fun getItemCount() = items.size
         override fun onBindViewHolder(holder: VH, position: Int) {
             val (role, text) = items[position]
             holder.tv.text = text.ifEmpty { "…" }
-            val lp = holder.tv.layoutParams as? android.widget.LinearLayout.LayoutParams
             if (role == "user") {
                 holder.tv.setBackgroundResource(R.drawable.bubble_user)
                 holder.tv.gravity = Gravity.START
                 (holder.root as? android.widget.LinearLayout)?.gravity = Gravity.END
+                holder.btn.visibility = View.GONE
             } else {
                 holder.tv.setBackgroundResource(R.drawable.bubble_assistant)
                 holder.tv.gravity = Gravity.START
                 (holder.root as? android.widget.LinearLayout)?.gravity = Gravity.START
+                if (text.isNotBlank() && text != "…") {
+                    holder.btn.visibility = View.VISIBLE
+                    holder.btn.setOnClickListener { onApply(text) }
+                } else holder.btn.visibility = View.GONE
             }
         }
     }
