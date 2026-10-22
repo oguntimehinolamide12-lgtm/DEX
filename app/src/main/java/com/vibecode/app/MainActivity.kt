@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Prefs.init(this)
+        try { com.chaquo.python.Python.start(com.chaquo.python.android.AndroidPlatform(this)) } catch (_: Exception) {}
         val themeRes = when (Prefs.theme()) {
             "light" -> com.vibecode.app.R.style.Theme_VibeCode_Light
             "high_contrast" -> com.vibecode.app.R.style.Theme_VibeCode_HighContrast
