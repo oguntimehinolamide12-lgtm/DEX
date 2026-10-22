@@ -38,7 +38,6 @@ class MainActivity : AppCompatActivity() {
     private val openFolderLauncher = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
         uri?.let {
             try { contentResolver.takePersistableUriPermission(it, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION) } catch (_: Exception) { }
-            Prefs.setLastFolder(uri.toString())
             Toast.makeText(this, "Opened: $uri", Toast.LENGTH_SHORT).show()
         }
     }

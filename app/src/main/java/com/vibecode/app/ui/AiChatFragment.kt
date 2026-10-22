@@ -33,6 +33,18 @@ class AiChatFragment : Fragment() {
         binding.chatRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.chatRecycler.adapter = adapter
 
+        if (chat.isEmpty()) {
+            val logo = """  ____  _____  __  __
+ |  _ \| ____| \ \/ /
+ | | | |  _|    \  /
+ | |_| | |___   /  \
+ |____/|_____| /_/\_\
+ 
+ Hi, I'm DEX — your coding buddy. Ask me anything!"""
+            chat.add("assistant" to logo)
+            adapter.notifyItemInserted(0)
+        }
+
         binding.btnSend.setOnClickListener { send() }
         binding.inputMessage.setOnEditorActionListener { _, _, _ -> send(); true }
     }
