@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">VibeCode</string>
+    <string name="settings">Settings</string>
+    <string name="new_file">New File</string>
+    <string name="open_folder">Open Folder</string>
+    <string name="save">Save</string>
+    <string name="run">Run</string>
+    <string name="ai_chat">AI Agent</string>
+    <string name="api_key">API Key</string>
+    <string name="provider">Provider</string>
+    <string name="model">Model</string>
+    <string name="send">Send</string>
+    <string name="apply_code">Apply to editor</string>
+    <string name="no_file_open">No file open</string>
+    <string name="file_saved">File saved</string>
+    <string name="error">Error</string>
+    <string name="permission_needed">Storage permission needed</string>
+</resources>
