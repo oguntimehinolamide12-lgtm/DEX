@@ -86,6 +86,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadDir(dir: File) {
         currentDir = dir
+        Prefs.setLastFolder(dir.absolutePath)
         allFiles.clear()
         if (dir.parentFile != null) allFiles.add(dir.parentFile!!)
         allFiles.addAll(FileManager.listDir(dir))

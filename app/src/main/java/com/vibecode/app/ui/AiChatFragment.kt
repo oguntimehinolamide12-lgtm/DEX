@@ -13,6 +13,7 @@ import com.vibecode.app.ai.AiAgent
 import com.vibecode.app.ai.ChatMessage
 import com.vibecode.app.databinding.FragmentAiBinding
 import com.vibecode.app.util.CurrentFile
+import com.vibecode.app.util.Prefs
 
 
 class AiChatFragment : Fragment() {
@@ -76,8 +77,14 @@ class AiChatFragment : Fragment() {
 
     private fun buildSystem(): String {
         val cf = CurrentFile
-        if (cf.content.isBlank()) return "You are a helpful coding assistant inside a mobile code editor. Answer concisely."
-        return "You are a helpful coding assistant inside a mobile code editor. The user is editing file: ${cf.path}. Current file content:\n```\n${cf.content.take(8000)}\n```\nAnswer concisely and provide code when useful."
+        val base = if (cf.content.isBlank()) "You are a helpful coding assistant inside a mobile code editor. Answer concisely." else "You are a helpful coding assistant inside a mobile code editor. The user is editing file: ${cf.path}. Current file content:\n```\n${cf.content.take(8000)}\n```\nAnswer concisely and provide code when useful."
+        if (!Prefs.fileAccess()) return base
+        val folder = Prefs.lastFolder()
+        if (folder.isBlank()) return base
+        val dir = try { java.io.File(folder) } catch (_: Exception) { null }
+        val files = dir?.listFiles()?.map { it.name }?.take(80)
+        if (files.isNullOrEmpty()) return base
+        return base + "\n\nDevice file access is enabled. Current folder: $folder\nFiles: ${files.joinToString(", ")}"
     }
 
     private fun applyToEditor(text: String) {

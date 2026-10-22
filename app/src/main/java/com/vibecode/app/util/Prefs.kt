@@ -29,6 +29,10 @@ object Prefs {
         list.add(0, path)
         sp.edit().putString("recentFiles", list.take(10).joinToString("|")).apply()
     }
+    fun lastFolder() = sp.getString("lastFolder", "") ?: ""
+    fun setLastFolder(path: String) = sp.edit().putString("lastFolder", path).apply()
+
+
     fun fileAccess() = sp.getBoolean("fileAccess", false)
     fun setFileAccess(v: Boolean) = sp.edit().putBoolean("fileAccess", v).apply()
 
