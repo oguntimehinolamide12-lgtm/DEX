@@ -1,4 +1,4 @@
-# VibeCode - Lightweight Android Code Editor with AI Agent
+// DEX - Lightweight Android Code Editor with AI Agent
 
-rootProject.name = "VibeCode"
+rootProject.name = "DEX"
 include(":app")
