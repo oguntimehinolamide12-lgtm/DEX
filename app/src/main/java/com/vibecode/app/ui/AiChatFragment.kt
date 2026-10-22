@@ -37,6 +37,8 @@ class AiChatFragment : Fragment() {
         binding.inputMessage.setOnEditorActionListener { _, _, _ -> send(); true }
     }
 
+    private var toolDepth = 0
+
     private fun send() {
         val text = binding.inputMessage.text.toString().trim()
         if (text.isEmpty()) return
@@ -45,7 +47,11 @@ class AiChatFragment : Fragment() {
         chat.add("user" to text)
         adapter.notifyItemInserted(chat.size - 1)
         binding.chatRecycler.scrollToPosition(chat.size - 1)
+        toolDepth = 0
+        runChat()
+    }
 
+    private fun runChat() {
         val sys = buildSystem()
         val full = mutableListOf<ChatMessage>()
         if (sys.isNotBlank()) full.add(ChatMessage("system", sys))
@@ -54,6 +60,7 @@ class AiChatFragment : Fragment() {
         chat.add("assistant" to "")
         val idx = chat.size - 1
         adapter.notifyItemInserted(idx)
+        binding.chatRecycler.scrollToPosition(idx)
 
         val sb = StringBuilder()
         AiAgent.chat(full, { token ->
@@ -65,7 +72,21 @@ class AiChatFragment : Fragment() {
             }
         }, {
             activity?.runOnUiThread {
-                messages.add(ChatMessage("assistant", sb.toString()))
+                val reply = sb.toString()
+                messages.add(ChatMessage("assistant", reply))
+                val m = Regex("\\[\\[READ_FILE:(.+?)\\]\\]").find(reply)
+                if (m != null && Prefs.fileAccess() && toolDepth < 3) {
+                    toolDepth++
+                    val path = m.groupValues[1].trim()
+                    val content = try { java.io.File(path).readText().take(8000) } catch (e: Exception) { "Error reading file: ${e.message}" }
+                    chat[idx] = "assistant" to "🔧 Read $path"
+                    adapter.notifyItemChanged(idx)
+                    messages.add(ChatMessage("user", "Tool result for $path:\n```\n$content\n```"))
+                    runChat()
+                } else {
+                    chat[idx] = "assistant" to reply
+                    adapter.notifyItemChanged(idx)
+                }
             }
         }, { err ->
             activity?.runOnUiThread {
@@ -77,14 +98,14 @@ class AiChatFragment : Fragment() {
 
     private fun buildSystem(): String {
         val cf = CurrentFile
-        val base = if (cf.content.isBlank()) "You are a helpful coding assistant inside a mobile code editor. Answer concisely." else "You are a helpful coding assistant inside a mobile code editor. The user is editing file: ${cf.path}. Current file content:\n```\n${cf.content.take(8000)}\n```\nAnswer concisely and provide code when useful."
+        val base = if (cf.content.isBlank()) "You are DEX, a friendly, witty, and helpful coding assistant inside a mobile code editor. Answer concisely." else "You are DEX, a friendly, witty, and helpful coding assistant inside a mobile code editor. The user is editing file: ${cf.path}. Current file content:\n```\n${cf.content.take(8000)}\n```\nAnswer concisely and provide code when useful."
         if (!Prefs.fileAccess()) return base
         val folder = Prefs.lastFolder()
         if (folder.isBlank()) return base
         val dir = try { java.io.File(folder) } catch (_: Exception) { null }
         val files = dir?.listFiles()?.map { it.name }?.take(80)
         if (files.isNullOrEmpty()) return base
-        return base + "\n\nDevice file access is enabled. Current folder: $folder\nFiles: ${files.joinToString(", ")}"
+        return base + "\n\nDevice file access is enabled. Current folder: $folder\nFiles: ${files.joinToString(", ")}\n\nTool: to read a file's contents, output exactly [[READ_FILE:<absolute path>]] on its own line. The app will return the file contents. Use only paths from the listed files or the currently open file."
     }
 
     private fun applyToEditor(text: String) {

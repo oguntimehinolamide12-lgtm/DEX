@@ -23,7 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Ask the agent..."
+            android:hint="Ask DEX..."
             android:textColor="@color/text"
             android:textColorHint="@color/text_muted"
             android:background="@android:color/transparent"

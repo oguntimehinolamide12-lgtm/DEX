@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         val adapter = ViewPagerAdapter(this)
         binding.viewPager.adapter = adapter
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, pos ->
-            tab.text = if (pos == 0) "Editor" else "AI Agent"
+            tab.text = if (pos == 0) "Editor" else "DEX"
         }.attach()
 
         fileAdapter = FileAdapter(files) { file ->
