@@ -28,6 +28,11 @@ class EditorFragment : Fragment() {
         binding.btnFind.setOnClickListener { findNext() }
         binding.btnReplace.setOnClickListener { replaceOne() }
         binding.btnGoto.setOnClickListener { gotoLine() }
+        binding.editor.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: android.text.Editable?) { updateStatus() }
+        })
     }
 
     fun openFile(file: File) {
@@ -39,6 +44,7 @@ class EditorFragment : Fragment() {
         com.vibecode.app.util.CurrentFile.path = file.absolutePath
         com.vibecode.app.util.CurrentFile.content = content
         Prefs.addRecentFile(file.absolutePath)
+        updateStatus()
     }
 
     fun applyText(text: String) {
@@ -99,6 +105,17 @@ class EditorFragment : Fragment() {
         for (i in 0 until n - 1) pos += lines[i].length + 1
         ed.setSelection(pos)
         ed.requestFocus()
+    }
+
+    private fun updateStatus() {
+        val ed = binding.editor
+        val text = ed.text?.toString() ?: ""
+        val pos = ed.selectionStart.coerceAtLeast(0)
+        val before = text.take(pos)
+        val line = before.count { it == '\n' } + 1
+        val col = pos - (before.lastIndexOf('
+') + 1) + 1
+        binding.statusBar.text = "${FileManager.languageFor(currentFile ?: java.io.File(""))}  |  Ln $line, Col $col  |  Tab ${Prefs.tabSize()}"
     }
 
     override fun onDestroyView() {
