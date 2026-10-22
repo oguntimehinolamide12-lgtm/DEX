@@ -68,6 +68,7 @@ class EditorFragment : Fragment() {
         val line = before.count { it == '\n' } + 1
         val col = pos - (before.lastIndexOf('\n') + 1) + 1
         binding.statusBar.text = "${FileManager.languageFor(currentFile ?: java.io.File(""))}  |  Ln $line, Col $col  |  Tab ${Prefs.tabSize()}"
+        try { binding.cursorInfo.text = "Ln $line, Col $col" } catch (_: Exception) {}
     }
 
     override fun onDestroyView() {

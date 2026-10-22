@@ -8,10 +8,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="4dp"
-        android:background="@color/surface">
-        <TextView android:id="@+id/fileTitle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:textColor="@color/text" android:textStyle="bold" android:padding="8dp" />
-        <Button android:id="@+id/btnSave" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/save" android:minHeight="36dp" />
+        android:gravity="center_vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:background="@color/surface"
+        android:elevation="2dp">
+        <TextView android:id="@+id/fileTitle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:textColor="@color/text" android:textStyle="bold" android:textSize="14sp" android:ellipsize="middle" android:singleLine="true" />
+        <ImageButton android:id="@+id/btnSave" android:layout_width="36dp" android:layout_height="36dp" android:src="@drawable/ic_save" android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="@string/save" />
     </LinearLayout>
     <com.vibecode.app.editor.CodeEditorView
         android:id="@+id/editor"
@@ -19,16 +24,19 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/background"
-        android:padding="4dp"
         android:textColor="@color/text"
         android:textSize="13sp" />
-    <TextView
-        android:id="@+id/statusBar"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:background="@color/status_bar"
-        android:textColor="#ffffff"
-        android:padding="4dp"
-        android:textSize="11sp"
-        android:text="Ready" />
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp">
+        <TextView android:id="@+id/statusBar" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:textColor="#ffffff" android:textSize="11sp" android:text="Ready" />
+        <TextView android:id="@+id/cursorInfo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#ffffff" android:textSize="11sp" android:text="Ln 1, Col 1" />
+    </LinearLayout>
 </LinearLayout>

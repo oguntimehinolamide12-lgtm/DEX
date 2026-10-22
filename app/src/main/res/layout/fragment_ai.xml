@@ -9,38 +9,46 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="8dp"
-        android:background="@color/surface">
+        android:paddingStart="12dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:background="@color/surface"
+        android:elevation="2dp">
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="DEX"
+            android:text="DEX Assistant"
             android:textColor="@color/text"
             android:textStyle="bold"
-            android:textSize="18sp" />
-        <Button
+            android:textSize="16sp" />
+        <ImageButton
             android:id="@+id/btnClear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Clear"
-            android:textSize="12sp"
-            android:minHeight="32dp" />
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_clear"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Clear" />
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatRecycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="4dp"
+        android:padding="8dp"
         android:clipToPadding="false" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="8dp"
-        android:background="@color/surface">
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:background="@color/surface"
+        android:elevation="4dp">
         <EditText
             android:id="@+id/inputMessage"
             android:layout_width="0dp"
@@ -50,13 +58,15 @@
             android:textColor="@color/text"
             android:textColorHint="@color/text_muted"
             android:background="@android:color/transparent"
-            android:inputType="textMultiLine"
-            android:maxLines="4" />
-        <Button
+            android:inputType="textMultiLine|textCapSentences"
+            android:maxLines="4"
+            android:padding="8dp" />
+        <ImageButton
             android:id="@+id/btnSend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/send"
-            android:minHeight="36dp" />
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_send"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/send" />
     </LinearLayout>
 </LinearLayout>
