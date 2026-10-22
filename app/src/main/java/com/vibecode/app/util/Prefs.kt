@@ -33,7 +33,7 @@ object Prefs {
     }
 
 
-    fun fileAccess() = sp.getBoolean("fileAccess", false)
+    fun fileAccess() = sp.getBoolean("fileAccess", true)
     fun setFileAccess(v: Boolean) = sp.edit().putBoolean("fileAccess", v).apply()
 
 

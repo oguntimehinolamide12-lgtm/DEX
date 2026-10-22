@@ -87,14 +87,30 @@ class AiChatFragment : Fragment() {
             activity?.runOnUiThread {
                 val reply = sb.toString()
                 messages.add(ChatMessage("assistant", reply))
-                val m = Regex("\\[\\[READ_FILE:(.+?)\\]\\]").find(reply)
-                if (m != null && Prefs.fileAccess() && toolDepth < 3) {
+                val readMatch = Regex("\\[\\[READ_FILE:(.+?)\\]\\]").find(reply)
+                val writeMatch = Regex("\\[\\[WRITE_FILE:(.+?)\\]\\]").find(reply)
+                if (readMatch != null && Prefs.fileAccess() && toolDepth < 3) {
                     toolDepth++
-                    val path = m.groupValues[1].trim()
+                    val path = readMatch.groupValues[1].trim()
                     val content = try { java.io.File(path).readText().take(8000) } catch (e: Exception) { "Error reading file: ${e.message}" }
-                    chat[idx] = "assistant" to "🔧 Read $path"
+                    chat[idx] = "assistant" to "Read $path"
                     adapter.notifyItemChanged(idx)
                     messages.add(ChatMessage("user", "Tool result for $path:\n```\n$content\n```"))
+                    runChat()
+                } else if (writeMatch != null && Prefs.fileAccess() && toolDepth < 3) {
+                    toolDepth++
+                    val path = writeMatch.groupValues[1].trim()
+                    val codeMatch = Regex("```[a-zA-Z0-9]*\n([\s\S]*?)```").find(reply.substring(writeMatch.range.last))
+                    val content = codeMatch?.groupValues?.get(1) ?: ""
+                    val ok = try {
+                        val f = java.io.File(path)
+                        f.parentFile?.mkdirs()
+                        f.writeText(content)
+                        true
+                    } catch (e: Exception) { false }
+                    chat[idx] = "assistant" to (if (ok) "Wrote $path" else "Failed to write $path")
+                    adapter.notifyItemChanged(idx)
+                    messages.add(ChatMessage("user", "Tool result: ${if (ok) "Successfully wrote $path" else "Error writing $path"}"))
                     runChat()
                 } else {
                     chat[idx] = "assistant" to reply
@@ -120,7 +136,7 @@ class AiChatFragment : Fragment() {
             if (d.isDirectory) d.listFiles()?.map { it.name }?.take(80) else null
         } catch (_: Exception) { null }
         if (files.isNullOrEmpty()) return base
-        return base + "\n\nDevice file access is enabled. Current folder: $folder\nFiles: ${files.joinToString(", ")}\n\nTool: to read a file's contents, output exactly [[READ_FILE:<absolute path>]] on its own line. The app will return the file contents. Use only paths from the listed files or the currently open file."
+        return base + "\n\nDevice file access is enabled. Current folder: $folder\nFiles: ${files.joinToString(", ")}\n\nTool: to read a file, output [[READ_FILE:<absolute path>]]. To write a file, output [[WRITE_FILE:<absolute path>]] followed by a code block with the content. Use only paths from the listed files or the currently open file."
     }
 
     private fun clearChat() {

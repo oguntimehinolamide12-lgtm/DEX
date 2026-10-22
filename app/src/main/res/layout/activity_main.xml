@@ -57,6 +57,13 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
+            <View
+                android:id="@+id/splitter"
+                android:layout_width="12dp"
+                android:layout_height="match_parent"
+                android:background="@color/surface_variant"
+                android:clickable="true"
+                android:focusable="true" />
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/dexContainer"
                 android:layout_width="0dp"

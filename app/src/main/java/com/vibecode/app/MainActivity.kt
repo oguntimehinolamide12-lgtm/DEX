@@ -57,7 +57,28 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.dexContainer, AiChatFragment())
             .commit()
 
-        fileAdapter = FileAdapter(files) { file ->
+        val splitter = binding.splitter
+        var initialX = 0f
+        var initialDexWidth = 0
+        splitter.setOnTouchListener { _, event ->
+            when (event.action) {
+                android.view.MotionEvent.ACTION_DOWN -> {
+                    initialX = event.rawX
+                    initialDexWidth = binding.dexContainer.width
+                    true
+                }
+                android.view.MotionEvent.ACTION_MOVE -> {
+                    val delta = (initialX - event.rawX).toInt()
+                    val newWidth = (initialDexWidth + delta).coerceIn(200, binding.root.width - 200)
+                    val lp = binding.dexContainer.layoutParams as android.widget.LinearLayout.LayoutParams
+                    lp.width = newWidth
+                    lp.weight = 0f
+                    binding.dexContainer.layoutParams = lp
+                    true
+                }
+                else -> false
+            }
+        }
                 if (file.isDirectory) loadDir(file) else editorFragment.openFile(file)
         }
         binding.fileRecycler.layoutManager = LinearLayoutManager(this)
