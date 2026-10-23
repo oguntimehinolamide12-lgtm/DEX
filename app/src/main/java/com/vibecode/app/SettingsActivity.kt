@@ -83,6 +83,13 @@ class SettingsActivity : AppCompatActivity() {
             )
             ProfileManager.save(prof)
             Prefs.setActiveProfile(name)
+            Prefs.setProvider(prof.provider)
+            Prefs.setModel(prof.model)
+            Prefs.setBaseUrl(prof.baseUrl)
+            Prefs.setApiKey("openai", prof.openaiKey)
+            Prefs.setApiKey("anthropic", prof.claudeKey)
+            Prefs.setApiKey("gemini", prof.geminiKey)
+            Prefs.setApiKey("openai-compatible", prof.apiKey)
             refreshProfileSpinner()
             Toast.makeText(this, "Profile saved: $name", Toast.LENGTH_SHORT).show()
         }
@@ -165,6 +172,14 @@ class SettingsActivity : AppCompatActivity() {
         binding.etAnthropic.setText(p.claudeKey)
         binding.etGemini.setText(p.geminiKey)
         binding.etCustom.setText(p.apiKey)
+        // persist as active
+        Prefs.setProvider(p.provider)
+        Prefs.setModel(p.model)
+        Prefs.setBaseUrl(p.baseUrl)
+        Prefs.setApiKey("openai", p.openaiKey)
+        Prefs.setApiKey("anthropic", p.claudeKey)
+        Prefs.setApiKey("gemini", p.geminiKey)
+        Prefs.setApiKey("openai-compatible", p.apiKey)
         updateBaseUrlVisibility()
     }
     }
