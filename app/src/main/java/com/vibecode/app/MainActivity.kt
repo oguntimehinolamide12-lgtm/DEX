@@ -67,6 +67,11 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.dexContainer, AiChatFragment())
             .commit()
 
+        if (!Prefs.agentVisible()) {
+            binding.dexContainer.visibility = android.view.View.GONE
+            binding.splitter.visibility = android.view.View.GONE
+        }
+
         val splitter = binding.splitter
         var initialX = 0f
         var initialDexWidth = 0
@@ -176,6 +181,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menu.add(0, 1, 0, "Settings")
         menu.add(0, 2, 1, "Debug")
+        menu.add(0, 3, 2, "Toggle Agent")
         return true
     }
 
@@ -188,7 +194,19 @@ class MainActivity : AppCompatActivity() {
             toggleDebug()
             return true
         }
+        if (item.itemId == 3) {
+            toggleAgent()
+            return true
+        }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun toggleAgent() {
+        val visible = binding.dexContainer.visibility != android.view.View.VISIBLE
+        binding.dexContainer.visibility = if (visible) android.view.View.VISIBLE else android.view.View.GONE
+        binding.splitter.visibility = if (visible) android.view.View.VISIBLE else android.view.View.GONE
+        Prefs.setAgentVisible(visible)
+        Toast.makeText(this, if (visible) "Agent shown" else "Agent hidden", Toast.LENGTH_SHORT).show()
     }
 
     private fun toggleDebug() {

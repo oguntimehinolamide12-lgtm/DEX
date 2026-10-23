@@ -39,6 +39,12 @@ object Prefs {
     fun setFontFamily(v: String) = sp.edit().putString("fontFamily", v).apply()
     fun fileAccess() = sp.getBoolean("fileAccess", true)
     fun setFileAccess(v: Boolean) = sp.edit().putBoolean("fileAccess", v).apply()
+    fun agentVisible() = sp.getBoolean("agentVisible", true)
+    fun setAgentVisible(v: Boolean) = sp.edit().putBoolean("agentVisible", v).apply()
+    fun profilesJson() = sp.getString("profilesJson", "[]") ?: "[]"
+    fun setProfilesJson(v: String) = sp.edit().putString("profilesJson", v).apply()
+    fun activeProfile() = sp.getString("activeProfile", "") ?: ""
+    fun setActiveProfile(v: String) = sp.edit().putString("activeProfile", v).apply()
 
 
 }

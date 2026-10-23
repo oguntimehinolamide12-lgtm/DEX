@@ -9,7 +9,18 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Preset" android:textColor="@color/text" android:textStyle="bold" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="API Client Profile" android:textColor="@color/text" android:textStyle="bold" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="4dp">
+            <Spinner android:id="@+id/spinProfile" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" />
+            <Button android:id="@+id/btnProfileLoad" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Load" android:layout_marginStart="4dp" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="4dp">
+            <EditText android:id="@+id/etProfileName" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="Profile name" android:textColor="@color/text" />
+            <Button android:id="@+id/btnProfileSave" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Save as" android:layout_marginStart="4dp" />
+            <Button android:id="@+id/btnProfileDelete" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Delete" android:layout_marginStart="4dp" />
+        </LinearLayout>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Preset" android:textColor="@color/text" android:textStyle="bold" android:layout_marginTop="12dp" />
         <Spinner android:id="@+id/spinPreset" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" />
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Provider" android:textColor="@color/text" android:textStyle="bold" android:layout_marginTop="12dp" />

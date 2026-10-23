@@ -7,6 +7,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.vibecode.app.databinding.ActivitySettingsBinding
 import com.vibecode.app.util.Prefs
+import com.vibecode.app.util.ProfileManager
+import com.vibecode.app.util.ApiProfile
 
 
 class SettingsActivity : AppCompatActivity() {
@@ -56,8 +58,39 @@ class SettingsActivity : AppCompatActivity() {
         }
         binding.spinFont.setSelection(fonts.indexOf(Prefs.fontFamily()).coerceAtLeast(0))
 
-        binding.spinPreset.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, presets.map { it.name }).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        refreshProfileSpinner()
+
+        binding.btnProfileLoad.setOnClickListener {
+            val name = binding.spinProfile.selectedItem?.toString() ?: return@setOnClickListener
+            loadProfile(name)
+        }
+        binding.btnProfileSave.setOnClickListener {
+            val name = binding.etProfileName.text.toString().trim().ifBlank { "Profile ${ProfileManager.list().size + 1}" }
+            val prof = ApiProfile(
+                name = name,
+                provider = providers[binding.spinProvider.selectedItemPosition],
+                model = binding.etModel.text.toString().trim(),
+                baseUrl = binding.etBaseUrl.text.toString().trim(),
+                apiKey = when (providers[binding.spinProvider.selectedItemPosition]) {
+                    "anthropic" -> binding.etAnthropic.text.toString().trim()
+                    "gemini" -> binding.etGemini.text.toString().trim()
+                    "openai-compatible" -> binding.etCustom.text.toString().trim()
+                    else -> binding.etOpenAi.text.toString().trim()
+                },
+                claudeKey = binding.etAnthropic.text.toString().trim(),
+                geminiKey = binding.etGemini.text.toString().trim(),
+                openaiKey = binding.etOpenAi.text.toString().trim()
+            )
+            ProfileManager.save(prof)
+            Prefs.setActiveProfile(name)
+            refreshProfileSpinner()
+            Toast.makeText(this, "Profile saved: $name", Toast.LENGTH_SHORT).show()
+        }
+        binding.btnProfileDelete.setOnClickListener {
+            val name = binding.spinProfile.selectedItem?.toString() ?: return@setOnClickListener
+            ProfileManager.delete(name)
+            refreshProfileSpinner()
+            Toast.makeText(this, "Deleted $name", Toast.LENGTH_SHORT).show()
         }
 
         binding.etModel.setText(Prefs.model())
@@ -77,8 +110,10 @@ class SettingsActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
         })
 
+        binding.spinPreset.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, presets.map { it.name }).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
         binding.spinPreset.setOnItemSelectedListener(object : android.widget.AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val pr = presets[position]
                 binding.spinProvider.setSelection(providers.indexOf(pr.provider).coerceAtLeast(0))
                 if (pr.base.isNotBlank()) binding.etBaseUrl.setText(pr.base)
@@ -107,6 +142,31 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.btnTest.setOnClickListener { testConnection() }
+
+    private fun refreshProfileSpinner() {
+        val names = ProfileManager.list().map { it.name }.ifEmpty { listOf("(no profiles)") }
+        binding.spinProfile.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, names).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        val active = Prefs.activeProfile()
+        if (active.isNotBlank()) {
+            val idx = names.indexOf(active)
+            if (idx >= 0) binding.spinProfile.setSelection(idx)
+        }
+    }
+
+    private fun loadProfile(name: String) {
+        val p = ProfileManager.get(name) ?: return
+        Prefs.setActiveProfile(name)
+        binding.spinProvider.setSelection(providers.indexOf(p.provider).coerceAtLeast(0))
+        binding.etModel.setText(p.model)
+        binding.etBaseUrl.setText(p.baseUrl)
+        binding.etOpenAi.setText(p.openaiKey)
+        binding.etAnthropic.setText(p.claudeKey)
+        binding.etGemini.setText(p.geminiKey)
+        binding.etCustom.setText(p.apiKey)
+        updateBaseUrlVisibility()
+    }
     }
 
     private fun updateBaseUrlVisibility() {
