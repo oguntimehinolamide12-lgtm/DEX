@@ -67,11 +67,19 @@ class CodeEditorView @JvmOverloads constructor(
     }
 
     private fun applyHighlight(editable: android.text.Editable) {
+        val selStart = selectionStart
+        val selEnd = selectionEnd
         updating = true
         try {
             highlighter?.invoke(editable, context)
         } finally {
             updating = false
+        }
+        val len = editable.length
+        if (selStart >= 0 && selEnd >= 0 && len >= 0) {
+            val s = selStart.coerceIn(0, len)
+            val e = selEnd.coerceIn(0, len)
+            try { setSelection(s, e) } catch (_: Exception) { }
         }
     }
 
