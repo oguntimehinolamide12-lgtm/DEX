@@ -41,6 +41,7 @@ class AiChatFragment : Fragment() {
     private val chat = mutableListOf<Pair<String, String>>()
     private lateinit var adapter: MsgAdapter
     private var activeIndex = -1
+    private var autoScroll = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAiBinding.inflate(inflater, container, false)
@@ -49,8 +50,18 @@ class AiChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adapter = MsgAdapter(chat) { text -> applyToEditor(text) }
-        binding.chatRecycler.layoutManager = LinearLayoutManager(requireContext())
+        val layoutManager = LinearLayoutManager(requireContext())
+        binding.chatRecycler.layoutManager = layoutManager
         binding.chatRecycler.adapter = adapter
+        binding.chatRecycler.itemAnimator = null
+        binding.chatRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy < 0) autoScroll = false else if (dy > 0) autoScroll = isAtBottom()
+            }
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) autoScroll = isAtBottom()
+            }
+        })
 
         if (chat.isEmpty()) {
             chat.add("assistant" to LOGO)
@@ -86,6 +97,7 @@ class AiChatFragment : Fragment() {
         messages.add(ChatMessage("user", text))
         chat.add("user" to text)
         adapter.notifyItemInserted(chat.size - 1)
+        autoScroll = true
         scrollToEnd()
         activeIndex = -1
         runAgent()
@@ -184,7 +196,16 @@ class AiChatFragment : Fragment() {
     }
 
     private fun scrollToEnd() {
-        if (chat.isNotEmpty()) binding.chatRecycler.scrollToPosition(chat.size - 1)
+        if (!autoScroll || chat.isEmpty() || _binding == null) return
+        binding.chatRecycler.post { _binding?.chatRecycler?.scrollToPosition(chat.size - 1) }
+    }
+
+    private fun isAtBottom(): Boolean {
+        val b = _binding ?: return true
+        val lm = b.chatRecycler.layoutManager as? LinearLayoutManager ?: return true
+        val lastVisible = lm.findLastCompletelyVisibleItemPosition()
+        if (lastVisible == RecyclerView.NO_POSITION) return true
+        return lastVisible >= chat.size - 2
     }
 
     /** Tool JSON is plumbing, not conversation: hide it from the transcript. */
@@ -251,40 +272,45 @@ class AiChatFragment : Fragment() {
             val (role, text) = items[position]
             val context = holder.root.context
             holder.tv.text = text.ifEmpty { "…" }
-            holder.tv.textSize = if (role == "tool" || role == "error") 11f else 14f
+            holder.tv.textSize = if (role == "tool" || role == "error") 11f else 13.5f
             val layout = holder.root as? LinearLayout
             when (role) {
                 "user" -> {
                     holder.tv.setBackgroundResource(R.drawable.bg_user)
-                    holder.tv.setTextColor(ContextCompat.getColor(context, R.color.bone))
-                    holder.tv.gravity = Gravity.START
+                    holder.tv.setTextColor(android.graphics.Color.parseColor("#0B0604"))
+                    holder.tv.alpha = 1f
                     layout?.gravity = Gravity.END
                     holder.btn.visibility = View.GONE
                 }
                 "tool" -> {
-                    holder.tv.setBackgroundColor(android.graphics.Color.TRANSPARENT)
-                    holder.tv.setTextColor(ContextCompat.getColor(context, R.color.line_number))
-                    holder.tv.gravity = Gravity.START
+                    holder.tv.setBackgroundResource(R.drawable.bg_tool)
+                    holder.tv.setTextColor(resolveAttr(context, com.vibecode.app.R.attr.dexMuted, 0xFF7A6A84.toInt()))
+                    holder.tv.alpha = 0.95f
                     layout?.gravity = Gravity.START
                     holder.btn.visibility = View.GONE
                 }
                 "error" -> {
-                    holder.tv.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                    holder.tv.setBackgroundResource(R.drawable.bg_tool)
                     holder.tv.setTextColor(ContextCompat.getColor(context, R.color.magma))
-                    holder.tv.gravity = Gravity.START
+                    holder.tv.alpha = 1f
                     layout?.gravity = Gravity.START
                     holder.btn.visibility = View.GONE
                 }
                 else -> {
                     holder.tv.setBackgroundResource(R.drawable.bg_assistant)
-                    holder.tv.setTextColor(ContextCompat.getColor(context, R.color.bone))
-                    holder.tv.gravity = Gravity.START
+                    holder.tv.setTextColor(resolveAttr(context, com.vibecode.app.R.attr.dexText, 0xFFF3EADF.toInt()))
+                    holder.tv.alpha = 1f
                     layout?.gravity = Gravity.START
                     val hasCode = text.contains("```")
                     holder.btn.visibility = if (hasCode) View.VISIBLE else View.GONE
                     if (hasCode) holder.btn.setOnClickListener { onApply(text) }
                 }
             }
+        }
+
+        private fun resolveAttr(context: android.content.Context, attr: Int, fallback: Int): Int {
+            val ta = context.theme.obtainStyledAttributes(intArrayOf(attr))
+            return try { ta.getColor(0, fallback) } finally { ta.recycle() }
         }
     }
 }
