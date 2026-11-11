@@ -45,9 +45,17 @@ object LinuxEnv {
         "https://dl-cdn.alpinelinux.org/alpine/v$ALPINE_MAJOR/releases/$arch/alpine-minirootfs-$ALPINE_RELEASE-$arch.tar.gz"
 
     fun isInstalled(ctx: Context): Boolean {
-        if (!File(rootfsDir(ctx), "bin/sh").exists()) return false
+        val root = rootfsDir(ctx)
+        if (!root.isDirectory) return false
+        val shellOk = File(root, "bin/sh").exists() ||
+            File(root, "bin/busybox").exists() ||
+            File(root, "bin/ash").exists() ||
+            File(root, "usr/bin/env").exists()
+        val rootfsLooksPresent = shellOk || (File(root, "etc").isDirectory && File(root, "usr").isDirectory)
+        if (!rootfsLooksPresent) return false
         val proot = prootFile(ctx)
-        return proot.isFile && (proot.canExecute() || proot.absolutePath.contains("/lib/"))
+        val bundled = File(ctx.applicationInfo.nativeLibraryDir, "libproot.so")
+        return proot.isFile || bundled.isFile
     }
 
     // ------------------------------------------------------------------ install
