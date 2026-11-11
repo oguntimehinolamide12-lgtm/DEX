@@ -41,11 +41,14 @@ class TerminalSession(
         stop()
         val proot = LinuxEnv.prootFile(ctx)
         val rootfs = LinuxEnv.rootfsDir(ctx)
-        if (!proot.isFile || !File(rootfs, "bin/sh").exists()) {
+        val shellOk = File(rootfs, "bin/sh").exists() || File(rootfs, "bin/busybox").exists()
+        val bundled = File(ctx.applicationInfo.nativeLibraryDir, "libproot.so")
+        if ((!proot.isFile && !bundled.isFile) || !shellOk) {
             lastError = "Linux environment is not installed."
             return false
         }
-        val command = mutableListOf(proot.absolutePath, "--link2symlink", "-0", "-r", rootfs.absolutePath)
+        val prootBin = if (proot.isFile) proot else bundled
+        val command = mutableListOf(prootBin.absolutePath, "--link2symlink", "-0", "-r", rootfs.absolutePath)
         for (host in listOf("/dev", "/proc", "/sys", "/system")) {
             if (File(host).isDirectory) {
                 command.add("-b")

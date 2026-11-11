@@ -89,45 +89,53 @@
         android:orientation="horizontal">
 
         <!-- rail -->
-        <LinearLayout
-            android:id="@+id/rail"
+        <ScrollView
+            android:id="@+id/railScroll"
             android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:background="@drawable/bg_bar"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp">
+            android:fillViewport="true"
+            android:scrollbars="none"
+            android:background="@drawable/bg_bar">
 
-            <TextView android:id="@+id/railFiles" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="46dp" android:text="" android:drawableTop="@drawable/ic_nav_files" android:paddingTop="11dp" android:contentDescription="Files" />
-            <TextView android:id="@+id/railEditor" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="46dp" android:text="" android:drawableTop="@drawable/ic_nav_editor" android:paddingTop="11dp" android:contentDescription="Editor" />
-            <TextView android:id="@+id/railBrowser" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="46dp" android:text="" android:drawableTop="@drawable/ic_nav_browser" android:paddingTop="11dp" android:contentDescription="Browser" />
-            <TextView android:id="@+id/railTerminal" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="46dp" android:text="" android:drawableTop="@drawable/ic_nav_terminal" android:paddingTop="11dp" android:contentDescription="Terminal" />
-            <TextView android:id="@+id/railCloud" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="46dp" android:text="" android:drawableTop="@drawable/ic_nav_cloud" android:paddingTop="11dp" android:contentDescription="Cloud" />
-
-            <View
+            <LinearLayout
+                android:id="@+id/rail"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
-                android:background="?attr/dexLine" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp">
 
-            <View
-                android:layout_width="16dp"
-                android:layout_height="2dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="6dp"
-                android:background="?attr/dexAccent"
-                android:alpha="0.25" />
+                <TextView android:id="@+id/railFiles" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="46dp" android:text="" android:drawableTop="@drawable/ic_nav_files" android:paddingTop="11dp" android:contentDescription="Files" />
+                <TextView android:id="@+id/railEditor" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="46dp" android:text="" android:drawableTop="@drawable/ic_nav_editor" android:paddingTop="11dp" android:contentDescription="Editor" />
+                <TextView android:id="@+id/railBrowser" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="46dp" android:text="" android:drawableTop="@drawable/ic_nav_browser" android:paddingTop="11dp" android:contentDescription="Browser" />
+                <TextView android:id="@+id/railTerminal" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="46dp" android:text="" android:drawableTop="@drawable/ic_nav_terminal" android:paddingTop="11dp" android:contentDescription="Terminal" />
+                <TextView android:id="@+id/railCloud" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="46dp" android:text="" android:drawableTop="@drawable/ic_nav_cloud" android:paddingTop="11dp" android:contentDescription="Cloud" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="?attr/dexLine" />
 
-            <TextView android:id="@+id/railAgent" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="46dp" android:text="" android:drawableTop="@drawable/ic_nav_agent" android:paddingTop="11dp" android:contentDescription="Agent" />
-        </LinearLayout>
+                <View
+                    android:layout_width="16dp"
+                    android:layout_height="2dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="6dp"
+                    android:background="?attr/dexAccent"
+                    android:alpha="0.25" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView android:id="@+id/railAgent" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="46dp" android:text="" android:drawableTop="@drawable/ic_nav_agent" android:paddingTop="11dp" android:contentDescription="Agent" />
+            </LinearLayout>
+        </ScrollView>
 
         <View
             android:layout_width="1dp"
