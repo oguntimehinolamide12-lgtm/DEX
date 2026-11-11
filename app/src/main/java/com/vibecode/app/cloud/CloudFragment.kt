@@ -278,9 +278,9 @@ class CloudFragment : Fragment() {
         binding.ckCtrl.setBackgroundResource(
             if (on) com.vibecode.app.R.drawable.bg_key_accent else com.vibecode.app.R.drawable.bg_key
         )
-        binding.ckCtrl.setTextColor(
+        binding.ckCtrl.setColorFilter(
             if (on) themeColor(com.vibecode.app.R.attr.dexBg, 0xFF07050A.toInt())
-            else themeColor(com.vibecode.app.R.attr.dexText, 0xFFF3EADF.toInt())
+            else themeColor(com.vibecode.app.R.attr.dexMuted, 0xFF8B7C92.toInt())
         )
     }
 

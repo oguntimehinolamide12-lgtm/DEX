@@ -175,17 +175,17 @@
             android:paddingStart="5dp"
             android:paddingEnd="5dp">
 
-            <Button android:id="@+id/keyEsc" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:text="ESC" />
-            <Button android:id="@+id/keyTab" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="3dp" android:text="TAB" />
-            <Button android:id="@+id/keyCtrl" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="3dp" android:text="CTRL" />
-            <Button android:id="@+id/keyInterrupt" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="3dp" android:text="^C" />
+            <ImageButton android:id="@+id/keyEsc" style="@style/DexKey" android:layout_width="34dp" android:layout_height="26dp" android:src="@drawable/ic_key_esc" android:scaleType="centerInside" android:padding="4dp" android:tint="?attr/dexMuted" android:contentDescription="Escape" />
+            <ImageButton android:id="@+id/keyTab" style="@style/DexKey" android:layout_width="34dp" android:layout_height="26dp" android:layout_marginStart="3dp" android:src="@drawable/ic_key_tab" android:scaleType="centerInside" android:padding="4dp" android:tint="?attr/dexMuted" android:contentDescription="Tab" />
+            <ImageButton android:id="@+id/keyCtrl" style="@style/DexKey" android:layout_width="34dp" android:layout_height="26dp" android:layout_marginStart="3dp" android:src="@drawable/ic_key_ctrl" android:scaleType="centerInside" android:padding="4dp" android:tint="?attr/dexMuted" android:contentDescription="Control" />
+            <ImageButton android:id="@+id/keyInterrupt" style="@style/DexKey" android:layout_width="34dp" android:layout_height="26dp" android:layout_marginStart="3dp" android:src="@drawable/ic_stop" android:scaleType="centerInside" android:padding="5dp" android:tint="?attr/dexDanger" android:contentDescription="Interrupt" />
 
             <View android:layout_width="1dp" android:layout_height="18dp" android:layout_marginStart="6dp" android:layout_marginEnd="6dp" android:background="?attr/dexLine" />
 
-            <Button android:id="@+id/keyUp" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:text="↑" />
-            <Button android:id="@+id/keyDown" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="3dp" android:text="↓" />
-            <Button android:id="@+id/keyLeft" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="3dp" android:text="←" />
-            <Button android:id="@+id/keyRight" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="3dp" android:text="→" />
+            <ImageButton android:id="@+id/keyUp" style="@style/DexKey" android:layout_width="30dp" android:layout_height="26dp" android:src="@drawable/ic_key_up" android:scaleType="centerInside" android:padding="5dp" android:tint="?attr/dexMuted" android:contentDescription="Up" />
+            <ImageButton android:id="@+id/keyDown" style="@style/DexKey" android:layout_width="30dp" android:layout_height="26dp" android:layout_marginStart="3dp" android:src="@drawable/ic_key_down" android:scaleType="centerInside" android:padding="5dp" android:tint="?attr/dexMuted" android:contentDescription="Down" />
+            <ImageButton android:id="@+id/keyLeft" style="@style/DexKey" android:layout_width="30dp" android:layout_height="26dp" android:layout_marginStart="3dp" android:src="@drawable/ic_key_left" android:scaleType="centerInside" android:padding="5dp" android:tint="?attr/dexMuted" android:contentDescription="Left" />
+            <ImageButton android:id="@+id/keyRight" style="@style/DexKey" android:layout_width="30dp" android:layout_height="26dp" android:layout_marginStart="3dp" android:src="@drawable/ic_key_right" android:scaleType="centerInside" android:padding="5dp" android:tint="?attr/dexMuted" android:contentDescription="Right" />
 
             <View android:layout_width="1dp" android:layout_height="18dp" android:layout_marginStart="6dp" android:layout_marginEnd="6dp" android:background="?attr/dexLine" />
 
