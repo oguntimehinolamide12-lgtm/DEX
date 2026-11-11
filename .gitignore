@@ -25,3 +25,7 @@ captures/
 # External
 .externalNativeBuild/
 .cxx/
+
+# Release signing (local only)
+keystore/
+keystore.properties
