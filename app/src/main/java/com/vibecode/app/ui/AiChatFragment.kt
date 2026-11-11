@@ -208,9 +208,12 @@ class AiChatFragment : Fragment() {
         return lastVisible >= chat.size - 2
     }
 
-    /** Tool JSON is plumbing, not conversation: hide it from the transcript. */
+    /** Tool JSON and model reasoning tags are plumbing, not conversation: hide them. */
     private fun visibleText(raw: String): String =
-        raw.replace(Regex("<tool>[\\s\\S]*?</tool>", RegexOption.IGNORE_CASE), "").trim()
+        raw.replace(Regex("<tool>[\\s\\S]*?</tool>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<think>[\\s\\S]*?</think>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("</?think>", RegexOption.IGNORE_CASE), "")
+            .trim()
 
     private fun clearChat() {
         AgentSession.cancel()
