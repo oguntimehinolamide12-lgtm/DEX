@@ -17,12 +17,15 @@ class CodeEditorView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : AppCompatEditText(context, attrs) {
 
+    private var programmaticChange = false
+
     private fun typefaceFor(name: String): Typeface = when (name) {
         "sans" -> Typeface.SANS_SERIF
         "serif" -> Typeface.SERIF
         else -> Typeface.MONOSPACE
     }
-private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+
+    private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = context.getColor(R.color.line_number)
         textSize = 12f * resources.displayMetrics.density
         typeface = Typeface.MONOSPACE
@@ -42,8 +45,8 @@ private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         setBackgroundColor(Color.TRANSPARENT)
         setPadding(gutterWidth + (8 * resources.displayMetrics.density).toInt(), paddingTop, paddingRight, paddingBottom)
         addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
             override fun afterTextChanged(s: Editable?) {
                 if (updating || s == null) return
                 applyHighlight(s)
@@ -51,10 +54,16 @@ private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         })
     }
 
+    fun setProgrammaticChange(value: Boolean) {
+        programmaticChange = value
+    }
+
+    fun isApplyingProgrammaticChange(): Boolean = programmaticChange
+
     fun setLanguage(lang: String) {
         language = lang
         highlighter = SyntaxHighlighter.forLanguage(lang)
-        if (text != null) applyHighlight(text!!)
+        text?.let { applyHighlight(it) }
     }
 
     private fun applyHighlight(editable: android.text.Editable) {
@@ -67,7 +76,6 @@ private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
     }
 
     override fun onDraw(canvas: Canvas) {
-        // draw line numbers
         val layout = layout ?: run { super.onDraw(canvas); return }
         val firstLine = (scrollY / lineHeight).coerceAtLeast(0)
         val lastLine = ((scrollY + height) / lineHeight + 1).coerceAtMost(lineCount)
@@ -91,7 +99,6 @@ private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             text?.replace(start, end, " ".repeat(Prefs.tabSize()))
             return true
         }
-        // auto-pair
         val ch = event?.unicodeChar?.toChar()
         val pairs = mapOf('(' to ')', '{' to '}', '[' to ']', '"' to '"', '\'' to '\'')
         if (ch != null && pairs.containsKey(ch)) {
@@ -103,14 +110,12 @@ private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                 setSelection(start + 1)
                 return true
             } else {
-                // wrap selection
                 val selected = text?.substring(start, end) ?: ""
                 text?.replace(start, end, "$ch$selected$closing")
                 setSelection(start + 1, start + 1 + selected.length)
                 return true
             }
         }
-        // skip over closing bracket if already there
         if (ch != null && (ch == ')' || ch == '}' || ch == ']' || ch == '"' || ch == '\'')) {
             val start = selectionStart
             if (start < (text?.length ?: 0) && text?.get(start) == ch) {

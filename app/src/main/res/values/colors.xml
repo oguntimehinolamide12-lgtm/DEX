@@ -1,25 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background">#1e1e1e</color>
-    <color name="surface">#252526</color>
-    <color name="primary">#007acc</color>
-    <color name="primary_dark">#333333</color>
-    <color name="accent">#007acc</color>
-    <color name="text">#d4d4d4</color>
-    <color name="text_secondary">#858585</color>
-    <color name="text_muted">#6a6a6a</color>
-    <color name="editor_bg">#1e1e1e</color>
-    <color name="line_number">#858585</color>
-    <color name="keyword">#569cd6</color>
-    <color name="string">#ce9178</color>
-    <color name="comment">#6a9955</color>
-    <color name="number">#b5cea8</color>
-    <color name="function">#dcdcaa</color>
-    <color name="type">#4ec9b0</color>
-    <color name="operator">#d4d4d4</color>
-    <color name="bubble_user">#264f78</color>
-    <color name="bubble_assistant">#2d2d30</color>
-    <color name="tab_inactive">#2d2d30</color>
-    <color name="status_bar">#007acc</color>
-    <color name="surface_variant">#3e3e42</color>
+    <!-- Editor syntax palette (charred obsidian base) -->
+    <color name="keyword">#FF7A45</color>
+    <color name="string">#FFC24B</color>
+    <color name="comment">#6E6273</color>
+    <color name="number">#7FE0C3</color>
+    <color name="type">#8FB6FF</color>
+    <color name="line_number">#463A4F</color>
+
+    <!-- Fixed ember palette used by the terminal renderer and custom views -->
+    <color name="void_black">#07050A</color>
+    <color name="ember">#FF5A1F</color>
+    <color name="magma">#FF2E88</color>
+    <color name="sulfur">#FFC24B</color>
+    <color name="bone">#F3EADF</color>
 </resources>

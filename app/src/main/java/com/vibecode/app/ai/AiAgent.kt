@@ -7,7 +7,7 @@ object AiAgent {
         "anthropic" -> AnthropicProvider()
         "gemini" -> GeminiProvider()
         "openai-compatible", "custom", "ollama" -> OpenAiProvider(Prefs.baseUrl().ifBlank { "http://10.0.2.2:11434/v1" })
-        else -> OpenAiProvider()
+        else -> OpenAiProvider(Prefs.baseUrl().ifBlank { "https://api.openai.com/v1" })
     }
 
     fun defaultModel(): String = when (Prefs.provider()) {
@@ -17,14 +17,19 @@ object AiAgent {
         else -> "gpt-4o-mini"
     }
 
-    fun chat(messages: List<ChatMessage>, onToken: (String) -> Unit, onDone: () -> Unit, onError: (String) -> Unit) {
+    fun chat(
+        messages: List<ChatMessage>,
+        onToken: (String) -> Unit,
+        onDone: () -> Unit,
+        onError: (String) -> Unit,
+        isCancelled: () -> Boolean = { false }
+    ) {
         val key = Prefs.apiKey(Prefs.provider())
-        // custom endpoints may not require a key (e.g. local Ollama)
         if (key.isBlank() && Prefs.provider() in setOf("openai", "anthropic", "gemini")) {
             onError("No API key set. Open Settings to add one.")
             return
         }
         val model = Prefs.model().ifBlank { defaultModel() }
-        provider().chat(key, model, messages, onToken, onDone, onError)
+        provider().chat(key, model, messages, onToken, onDone, onError, isCancelled)
     }
 }

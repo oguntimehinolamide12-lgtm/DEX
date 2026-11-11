@@ -4,21 +4,41 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:padding="10dp"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp"
     android:background="?attr/selectableItemBackground">
+
     <TextView
-        android:id="@+id/fileIcon"
-        android:layout_width="28dp"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textColor="@color/text_secondary" />
+        android:id="@+id/fileChip"
+        android:layout_width="30dp"
+        android:layout_height="20dp"
+        android:gravity="center"
+        android:background="@drawable/bg_chip"
+        android:fontFamily="monospace"
+        android:textSize="9sp"
+        android:textStyle="bold"
+        android:textColor="?attr/dexMuted"
+        android:text="··" />
+
     <TextView
         android:id="@+id/fileName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textColor="@color/text"
-        android:textSize="14sp"
+        android:layout_marginStart="8dp"
+        android:fontFamily="monospace"
+        android:textSize="12sp"
+        android:textColor="?attr/dexText"
         android:ellipsize="end"
         android:maxLines="1" />
+
+    <TextView
+        android:id="@+id/fileMeta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="monospace"
+        android:textSize="9sp"
+        android:textColor="?attr/dexMuted" />
 </LinearLayout>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?attr/dexBg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:background="@drawable/bg_bar">
+
+        <Button android:id="@+id/btnBack" style="@style/DexKey" android:layout_width="28dp" android:layout_height="24dp" android:text="‹" android:textSize="15sp" />
+        <Button android:id="@+id/btnForward" style="@style/DexKey" android:layout_width="28dp" android:layout_height="24dp" android:layout_marginStart="2dp" android:text="›" android:textSize="15sp" />
+        <Button android:id="@+id/btnReload" style="@style/DexKey" android:layout_width="28dp" android:layout_height="24dp" android:layout_marginStart="2dp" android:text="↻" android:textSize="12sp" />
+        <Button android:id="@+id/btnHome" style="@style/DexKey" android:layout_width="28dp" android:layout_height="24dp" android:layout_marginStart="2dp" android:text="⌂" android:textSize="12sp" />
+        <Button android:id="@+id/btnStop" style="@style/DexKey" android:layout_width="28dp" android:layout_height="24dp" android:layout_marginStart="2dp" android:text="×" android:textSize="13sp" />
+
+        <EditText
+            android:id="@+id/etUrl"
+            style="@style/DexInput"
+            android:layout_width="0dp"
+            android:layout_height="26dp"
+            android:layout_weight="1"
+            android:layout_marginStart="5dp"
+            android:hint="url or search"
+            android:inputType="textUri"
+            android:imeOptions="actionGo"
+            android:singleLine="true"
+            android:textSize="11sp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:max="100"
+        android:progress="0"
+        android:indeterminate="false"
+        android:progressTint="?attr/dexAccent"
+        android:progressBackgroundTint="?attr/dexLine"
+        android:visibility="gone" />
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="?attr/dexBg" />
+</LinearLayout>

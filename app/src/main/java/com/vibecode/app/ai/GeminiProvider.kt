@@ -10,10 +10,19 @@ import java.net.URL
 class GeminiProvider : AiProvider {
     override val name = "gemini"
 
-    override fun chat(apiKey: String, model: String, messages: List<ChatMessage>, onToken: (String) -> Unit, onDone: () -> Unit, onError: (String) -> Unit) {
+    override fun chat(
+        apiKey: String,
+        model: String,
+        messages: List<ChatMessage>,
+        onToken: (String) -> Unit,
+        onDone: () -> Unit,
+        onError: (String) -> Unit,
+        isCancelled: () -> Boolean
+    ) {
         Thread {
             var conn: HttpURLConnection? = null
             try {
+                if (isCancelled()) { onDone(); return@Thread }
                 val m = model.ifBlank { "gemini-1.5-flash" }
                 val url = URL("https://generativelanguage.googleapis.com/v1beta/models/$m:streamGenerateContent?alt=sse&key=$apiKey")
                 conn = (url.openConnection() as HttpURLConnection).apply {
@@ -23,7 +32,6 @@ class GeminiProvider : AiProvider {
                     connectTimeout = 30000
                     readTimeout = 120000
                 }
-                // Build contents; system -> first user? Gemini supports systemInstruction
                 val system = messages.filter { it.role == "system" }.joinToString("\n") { it.content }
                 val contents = JSONArray()
                 messages.filter { it.role != "system" }.forEach { msg ->
@@ -51,6 +59,11 @@ class GeminiProvider : AiProvider {
                 val reader = BufferedReader(conn.inputStream.reader())
                 var line: String?
                 while (reader.readLine().also { line = it } != null) {
+                    if (isCancelled()) {
+                        reader.close()
+                        onDone()
+                        return@Thread
+                    }
                     val l = line!!.trim()
                     if (!l.startsWith("data:")) continue
                     val data = l.removePrefix("data:").trim()
@@ -70,7 +83,7 @@ class GeminiProvider : AiProvider {
                 reader.close()
                 onDone()
             } catch (e: Exception) {
-                onError(e.message ?: "Unknown error")
+                if (isCancelled()) onDone() else onError(e.message ?: "Unknown error")
             } finally {
                 conn?.disconnect()
             }

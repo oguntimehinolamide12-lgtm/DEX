@@ -11,9 +11,11 @@ android {
     defaultConfig {
         applicationId = "com.vibecode.app"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        // proot executes binaries inside the Alpine rootfs, which lives in app
+        // storage. Android only allows that for apps targeting SDK 28 or lower.
+        targetSdk = 28
+        versionCode = 2
+        versionName = "2.0"
         ndk {
             abiFilters += listOf("arm64-v8a", "x86_64")
         }
@@ -41,6 +43,12 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
 }
 
 chaquopy {
@@ -62,4 +70,12 @@ dependencies {
     implementation("androidx.viewpager2:viewpager2:1.1.0")
     implementation("androidx.drawerlayout:drawerlayout:1.2.0")
     implementation("androidx.preference:preference-ktx:1.2.1")
+
+    // Cloud mode: SSH workspaces (pty shell + exec channels).
+    implementation("com.github.mwiede:jsch:0.2.20")
+
+    testImplementation("junit:junit:4.13.2")
+    // Embedded SSH server so the cloud engine is tested without a device.
+    testImplementation("org.apache.sshd:sshd-core:2.12.1")
+    testImplementation("org.slf4j:slf4j-simple:2.0.13")
 }

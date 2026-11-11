@@ -3,40 +3,99 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background">
+    android:background="?attr/dexBg">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="34dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingStart="12dp"
-        android:paddingEnd="8dp"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
-        android:background="@color/surface"
-        android:elevation="2dp">
-        <TextView android:id="@+id/fileTitle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:textColor="@color/text" android:textStyle="bold" android:textSize="14sp" android:ellipsize="middle" android:singleLine="true" />
-        <ImageButton android:id="@+id/btnSave" android:layout_width="36dp" android:layout_height="36dp" android:src="@drawable/ic_save" android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="@string/save" />
+        android:paddingStart="10dp"
+        android:paddingEnd="6dp"
+        android:background="@drawable/bg_bar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EDIT"
+            style="@style/DexLabel"
+            android:textColor="?attr/dexText" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="14dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/dexLine" />
+
+        <TextView
+            android:id="@+id/fileTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="@style/DexLabel"
+            android:textSize="11sp"
+            android:letterSpacing="0.03"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            android:text="no file" />
+
+        <TextView
+            android:id="@+id/dirtyDot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="●"
+            android:textSize="10sp"
+            android:textColor="?attr/dexSulfur"
+            android:layout_marginEnd="6dp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnSave"
+            style="@style/DexKey"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:text="SAVE" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/dexLine" />
+
     <com.vibecode.app.editor.CodeEditorView
         android:id="@+id/editor"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/background"
-        android:textColor="@color/text"
+        android:background="?attr/dexBg"
+        android:textColor="?attr/dexText"
         android:textSize="13sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="24dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:background="@color/status_bar"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp">
-        <TextView android:id="@+id/statusBar" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:textColor="#ffffff" android:textSize="11sp" android:text="Ready" />
-        <TextView android:id="@+id/cursorInfo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#ffffff" android:textSize="11sp" android:text="Ln 1, Col 1" />
+        android:background="?attr/dexPanel">
+
+        <TextView
+            android:id="@+id/statusBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="@style/DexLabel"
+            android:textSize="9sp"
+            android:text="TEXT · UTF-8" />
+
+        <TextView
+            android:id="@+id/cursorInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/DexLabel"
+            android:textSize="9sp"
+            android:text="LN 1 COL 1" />
     </LinearLayout>
 </LinearLayout>

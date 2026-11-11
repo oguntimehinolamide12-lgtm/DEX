@@ -3,21 +3,29 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="4dp">
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp">
+
     <TextView
         android:id="@+id/messageText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="12dp"
-        android:textColor="@color/text"
-        android:textSize="14sp"
-        android:maxWidth="280dp" />
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:fontFamily="monospace"
+        android:textColor="?attr/dexText"
+        android:textSize="12sp"
+        android:lineSpacingExtra="2dp"
+        android:maxWidth="300dp" />
+
     <Button
         android:id="@+id/btnApply"
+        style="@style/DexKey"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Apply to editor"
-        android:textSize="11sp"
-        android:visibility="gone"
-        android:minHeight="32dp" />
+        android:layout_height="24dp"
+        android:layout_marginTop="4dp"
+        android:text="APPLY TO EDITOR"
+        android:visibility="gone" />
 </LinearLayout>

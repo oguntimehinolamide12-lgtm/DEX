@@ -2,70 +2,109 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="?attr/dexBg">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="18dp">
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="API Client Profile" android:textColor="@color/text" android:textStyle="bold" />
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="4dp">
-            <Spinner android:id="@+id/spinProfile" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" />
-            <Button android:id="@+id/btnProfileLoad" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Load" android:layout_marginStart="4dp" />
-        </LinearLayout>
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="4dp">
-            <EditText android:id="@+id/etProfileName" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="Profile name" android:textColor="@color/text" />
-            <Button android:id="@+id/btnProfileSave" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Save as" android:layout_marginStart="4dp" />
-            <Button android:id="@+id/btnProfileDelete" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Delete" android:layout_marginStart="4dp" />
-        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DEX / CONFIG"
+            style="@style/DexTitle"
+            android:textSize="15sp"
+            android:letterSpacing="0.28"
+            android:textColor="?attr/dexAccent" />
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Preset" android:textColor="@color/text" android:textStyle="bold" android:layout_marginTop="12dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="model provider, skin, agent limits, browser home"
+            style="@style/DexLabel" />
+
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="14dp" android:background="?attr/dexLine" />
+
+        <!-- provider -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="MODEL PROVIDER" style="@style/DexLabel" android:textColor="?attr/dexText" />
         <Spinner android:id="@+id/spinPreset" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" />
-
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Provider" android:textColor="@color/text" android:textStyle="bold" android:layout_marginTop="12dp" />
         <Spinner android:id="@+id/spinProvider" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" />
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Model" android:textColor="@color/text" android:textStyle="bold" android:layout_marginTop="12dp" />
-        <EditText android:id="@+id/etModel" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text" android:hint="gpt-4o-mini" />
+        <EditText android:id="@+id/etModel" style="@style/DexInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:hint="model (gpt-4o-mini)" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilBaseUrl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp">
-            <EditText android:id="@+id/etBaseUrl" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text" android:hint="Base URL (optional)" />
+            android:layout_marginTop="8dp">
+            <EditText android:id="@+id/etBaseUrl" style="@style/DexInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="base url (optional)" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="OpenAI API Key" android:textColor="@color/text" android:layout_marginTop="12dp" />
-        <EditText android:id="@+id/etOpenAi" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPassword" android:textColor="@color/text" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="OPENAI KEY" style="@style/DexLabel" />
+        <EditText android:id="@+id/etOpenAi" style="@style/DexInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:inputType="textPassword" />
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Anthropic API Key" android:textColor="@color/text" android:layout_marginTop="12dp" />
-        <EditText android:id="@+id/etAnthropic" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPassword" android:textColor="@color/text" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="ANTHROPIC KEY" style="@style/DexLabel" />
+        <EditText android:id="@+id/etAnthropic" style="@style/DexInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:inputType="textPassword" />
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Gemini API Key" android:textColor="@color/text" android:layout_marginTop="12dp" />
-        <EditText android:id="@+id/etGemini" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPassword" android:textColor="@color/text" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="GEMINI KEY" style="@style/DexLabel" />
+        <EditText android:id="@+id/etGemini" style="@style/DexInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:inputType="textPassword" />
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="OpenAI-compatible / Custom API Key" android:textColor="@color/text" android:layout_marginTop="12dp" />
-        <EditText android:id="@+id/etCustom" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPassword" android:textColor="@color/text" android:hint="not needed for local Ollama" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="COMPATIBLE / CUSTOM KEY" style="@style/DexLabel" />
+        <EditText android:id="@+id/etCustom" style="@style/DexInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:inputType="textPassword" android:hint="not needed for local ollama" />
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Theme" android:textColor="@color/text" android:textStyle="bold" android:layout_marginTop="12dp" />
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="16dp" android:background="?attr/dexLine" />
+
+        <!-- skin -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="SKIN" style="@style/DexLabel" android:textColor="?attr/dexText" />
         <Spinner android:id="@+id/spinTheme" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" />
-
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Font family" android:textColor="@color/text" android:textStyle="bold" android:layout_marginTop="12dp" />
         <Spinner android:id="@+id/spinFont" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" />
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Font size" android:textColor="@color/text" android:layout_marginTop="12dp" />
-        <EditText android:id="@+id/etFontSize" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:textColor="@color/text" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="8dp">
+            <EditText android:id="@+id/etFontSize" style="@style/DexInput" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:inputType="number" android:hint="font size" />
+            <EditText android:id="@+id/etTabSize" style="@style/DexInput" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:layout_marginStart="6dp" android:inputType="number" android:hint="tab size" />
+        </LinearLayout>
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tab size" android:textColor="@color/text" android:layout_marginTop="12dp" />
-        <EditText android:id="@+id/etTabSize" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:textColor="@color/text" />
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="16dp" android:background="?attr/dexLine" />
 
-        <CheckBox android:id="@+id/cbFileAccess" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Allow AI agent to access files on device" android:textColor="@color/text" android:layout_marginTop="12dp" />
+        <!-- agent + browser -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="AGENT + BROWSER" style="@style/DexLabel" android:textColor="?attr/dexText" />
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="16dp">
-            <Button android:id="@+id/btnTest" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Test connection" />
-            <Button android:id="@+id/btnSave" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Save" android:layout_marginStart="8dp" />
+        <EditText android:id="@+id/etBrowserHome" style="@style/DexInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:inputType="textUri" android:hint="browser home url" />
+        <EditText android:id="@+id/etAgentSteps" style="@style/DexInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:inputType="number" android:hint="agent tool steps per request" />
+
+        <CheckBox
+            android:id="@+id/cbFileAccess"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="agent may read/write files and run code"
+            android:buttonTint="?attr/dexAccent"
+            android:textColor="?attr/dexText"
+            android:textSize="12sp" />
+
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="16dp" android:background="?attr/dexLine" />
+
+        <!-- profiles -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="SAVED PROFILES" style="@style/DexLabel" android:textColor="?attr/dexText" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="6dp" android:gravity="center_vertical">
+            <Spinner android:id="@+id/spinProfile" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" />
+            <Button android:id="@+id/btnProfileLoad" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="6dp" android:text="LOAD" />
+        </LinearLayout>
+
+        <EditText android:id="@+id/etProfileName" style="@style/DexInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:hint="profile name" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="6dp">
+            <Button android:id="@+id/btnProfileSave" style="@style/DexKey" android:layout_width="0dp" android:layout_weight="1" android:layout_height="30dp" android:text="SAVE AS" />
+            <Button android:id="@+id/btnProfileDelete" style="@style/DexKey" android:layout_width="0dp" android:layout_weight="1" android:layout_height="30dp" android:layout_marginStart="6dp" android:text="DELETE" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="18dp" android:layout_marginBottom="12dp">
+            <Button android:id="@+id/btnTest" style="@style/DexKey" android:layout_width="0dp" android:layout_weight="1" android:layout_height="40dp" android:text="TEST" />
+            <Button android:id="@+id/btnSave" style="@style/DexKeyAccent" android:layout_width="0dp" android:layout_weight="1" android:layout_height="40dp" android:layout_marginStart="8dp" android:text="SAVE" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

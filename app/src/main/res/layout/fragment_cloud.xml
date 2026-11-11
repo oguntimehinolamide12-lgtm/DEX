@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?attr/dexBg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="10dp"
+        android:paddingEnd="6dp"
+        android:background="@drawable/bg_bar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CLOUD"
+            style="@style/DexLabel"
+            android:textColor="?attr/dexText" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="14dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/dexLine" />
+
+        <TextView
+            android:id="@+id/tvCloudStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="@style/DexLabel"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            android:text="OFFLINE" />
+
+        <Button
+            android:id="@+id/btnDisconnect"
+            style="@style/DexKey"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:text="DROP"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/dexLine" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ScrollView
+            android:id="@+id/connectPanel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="REMOTE WORKSPACE"
+                    style="@style/DexLabel"
+                    android:textColor="?attr/dexAccent" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="SSH into free compute — GitHub Codespaces (via gh), Gitpod, Fly.io, a free VM — and let DEX edit and run there. The remote side gets a real pty, so vim and top work."
+                    style="@style/DexBody"
+                    android:textColor="?attr/dexMuted"
+                    android:textSize="11sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_vertical">
+
+                    <Spinner
+                        android:id="@+id/spinCloudProfile"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <Button android:id="@+id/btnSaveProfile" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="4dp" android:text="SAVE" />
+                    <Button android:id="@+id/btnDeleteProfile" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="4dp" android:text="DEL" />
+                </LinearLayout>
+
+                <EditText android:id="@+id/etCloudName" style="@style/DexInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:hint="profile name (e.g. codespace-web)" />
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="6dp">
+                    <EditText android:id="@+id/etHost" style="@style/DexInput" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:hint="host / ip" android:inputType="textUri" />
+                    <EditText android:id="@+id/etPort" style="@style/DexInput" android:layout_width="78dp" android:layout_height="wrap_content" android:layout_marginStart="6dp" android:hint="22" android:inputType="number" />
+                </LinearLayout>
+
+                <EditText android:id="@+id/etUser" style="@style/DexInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:hint="user" />
+
+                <Spinner
+                    android:id="@+id/spinAuth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp" />
+
+                <EditText android:id="@+id/etPassword" style="@style/DexInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:hint="password" android:inputType="textPassword" />
+
+                <EditText
+                    android:id="@+id/etPrivateKey"
+                    style="@style/DexInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="92dp"
+                    android:layout_marginTop="6dp"
+                    android:gravity="top|start"
+                    android:inputType="textMultiLine|textNoSuggestions"
+                    android:hint="-----BEGIN OPENSSH PRIVATE KEY-----" />
+
+                <EditText android:id="@+id/etPassphrase" style="@style/DexInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:hint="key passphrase (optional)" android:inputType="textPassword" />
+
+                <Button
+                    android:id="@+id/btnConnect"
+                    style="@style/DexKeyAccent"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="12dp"
+                    android:text="CONNECT WORKSPACE" />
+
+                <TextView
+                    android:id="@+id/tvCloudHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="CODESPACES: install gh in the TM pane, run 'apk add github-cli', then 'gh auth login'. Gitpod: SSH key auth on ssh.gitpod.io."
+                    style="@style/DexLabel"
+                    android:textSize="9sp" />
+            </LinearLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/sessionPanel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.vibecode.app.linux.TerminalView
+                android:id="@+id/cloudTerminal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="?attr/dexTermBg" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_bar"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp">
+
+                    <Button android:id="@+id/ckEsc" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="25dp" android:text="ESC" />
+                    <Button android:id="@+id/ckTab" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="25dp" android:layout_marginStart="3dp" android:text="TAB" />
+                    <Button android:id="@+id/ckCtrl" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="25dp" android:layout_marginStart="3dp" android:text="CTRL" />
+                    <Button android:id="@+id/ckInt" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="25dp" android:layout_marginStart="3dp" android:text="^C" />
+                    <Button android:id="@+id/ckUp" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="25dp" android:layout_marginStart="3dp" android:text="↑" />
+                    <Button android:id="@+id/ckDown" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="25dp" android:layout_marginStart="3dp" android:text="↓" />
+                    <Button android:id="@+id/ckLeft" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="25dp" android:layout_marginStart="3dp" android:text="←" />
+                    <Button android:id="@+id/ckRight" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="25dp" android:layout_marginStart="3dp" android:text="→" />
+                    <Button android:id="@+id/ckPipe" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="25dp" android:layout_marginStart="3dp" android:text="|" />
+                    <Button android:id="@+id/ckSlash" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="25dp" android:layout_marginStart="3dp" android:text="/" />
+                    <Button android:id="@+id/ckDash" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="25dp" android:layout_marginStart="3dp" android:text="-" />
+                    <Button android:id="@+id/ckTilde" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="25dp" android:layout_marginStart="3dp" android:text="~" />
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+    </FrameLayout>
+
+    <EditText
+        android:id="@+id/cloudInput"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:alpha="0"
+        android:inputType="textNoSuggestions|textVisiblePassword|textMultiLine"
+        android:imeOptions="flagNoExtractUi"
+        android:background="@android:color/transparent"
+        android:importantForAutofill="no" />
+</LinearLayout>

@@ -1,30 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.VibeCode" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryVariant">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="android:windowBackground">@color/background</item>
-        <item name="android:textColor">@color/text</item>
+    <!-- ============================ EMBER (default) ============================ -->
+    <style name="Theme.Dex" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="dexBg">#07050A</item>
+        <item name="dexPanel">#0F0B13</item>
+        <item name="dexPanelAlt">#191220</item>
+        <item name="dexLine">#2B2135</item>
+        <item name="dexText">#F3EADF</item>
+        <item name="dexMuted">#8B7C92</item>
+        <item name="dexAccent">#FF5A1F</item>
+        <item name="dexAccentAlt">#FF2E88</item>
+        <item name="dexSulfur">#FFC24B</item>
+        <item name="dexOk">#5CE1A0</item>
+        <item name="dexDanger">#FF4D4D</item>
+        <item name="dexTermBg">#08060B</item>
+
+        <item name="colorPrimary">#FF5A1F</item>
+        <item name="colorOnPrimary">#0B070C</item>
+        <item name="colorSecondary">#FF2E88</item>
+        <item name="colorSurface">#0F0B13</item>
+        <item name="colorOnSurface">#F3EADF</item>
+        <item name="android:colorBackground">#07050A</item>
+        <item name="android:windowBackground">#07050A</item>
+        <item name="android:textColorPrimary">#F3EADF</item>
+        <item name="android:textColorSecondary">#8B7C92</item>
+        <item name="android:textColorHint">#6B5D72</item>
+        <item name="android:statusBarColor">#07050A</item>
+        <item name="android:navigationBarColor">#07050A</item>
+        <item name="android:colorAccent">#FF5A1F</item>
     </style>
-    <style name="Theme.VibeCode.Light" parent="Theme.Material3.Light.NoActionBar">
-        <item name="colorPrimary">#007acc</item>
-        <item name="colorPrimaryVariant">#e0e0e0</item>
-        <item name="colorAccent">#007acc</item>
-        <item name="android:windowBackground">#f5f5f5</item>
-        <item name="android:textColor">#1e1e1e</item>
-    </style>
-    <style name="Theme.VibeCode.HighContrast" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="colorPrimary">#00ffff</item>
-        <item name="colorPrimaryVariant">#000000</item>
-        <item name="colorAccent">#ffff00</item>
+
+    <!-- =============================== ACID ================================== -->
+    <style name="Theme.Dex.Acid">
+        <item name="dexBg">#000000</item>
+        <item name="dexPanel">#0A0A0A</item>
+        <item name="dexPanelAlt">#151514</item>
+        <item name="dexLine">#2A2A26</item>
+        <item name="dexText">#EDEAE0</item>
+        <item name="dexMuted">#767a6a</item>
+        <item name="dexAccent">#C6FF00</item>
+        <item name="dexAccentAlt">#00E5FF</item>
+        <item name="dexSulfur">#FFEA00</item>
+        <item name="dexOk">#69FF9C</item>
+        <item name="dexDanger">#FF5252</item>
+        <item name="dexTermBg">#000000</item>
+        <item name="colorPrimary">#C6FF00</item>
+        <item name="colorOnPrimary">#050500</item>
+        <item name="colorSecondary">#00E5FF</item>
+        <item name="colorSurface">#0A0A0A</item>
+        <item name="colorOnSurface">#EDEAE0</item>
+        <item name="android:colorBackground">#000000</item>
         <item name="android:windowBackground">#000000</item>
-        <item name="android:textColor">#ffffff</item>
+        <item name="android:textColorPrimary">#EDEAE0</item>
+        <item name="android:textColorSecondary">#9AA08C</item>
+        <item name="android:colorAccent">#C6FF00</item>
+        <item name="android:statusBarColor">#000000</item>
+        <item name="android:navigationBarColor">#000000</item>
     </style>
-    <style name="Theme.VibeCode.Monokai" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="colorPrimary">#a6e22e</item>
-        <item name="colorPrimaryVariant">#272822</item>
-        <item name="colorAccent">#f92672</item>
-        <item name="android:windowBackground">#272822</item>
-        <item name="android:textColor">#f8f8f2</item>
+
+    <!-- =============================== PAPER ================================= -->
+    <style name="Theme.Dex.Paper">
+        <item name="dexBg">#F2EDE3</item>
+        <item name="dexPanel">#E8E1D4</item>
+        <item name="dexPanelAlt">#DED5C4</item>
+        <item name="dexLine">#C7BBA6</item>
+        <item name="dexText">#1B1712</item>
+        <item name="dexMuted">#6E6152</item>
+        <item name="dexAccent">#C2361B</item>
+        <item name="dexAccentAlt">#7A1F4F</item>
+        <item name="dexSulfur">#8A5A00</item>
+        <item name="dexOk">#1F6B45</item>
+        <item name="dexDanger">#A3170F</item>
+        <item name="dexTermBg">#F7F2E9</item>
+        <item name="colorPrimary">#C2361B</item>
+        <item name="colorOnPrimary">#F7F2E9</item>
+        <item name="colorSecondary">#7A1F4F</item>
+        <item name="colorSurface">#E8E1D4</item>
+        <item name="colorOnSurface">#1B1712</item>
+        <item name="android:colorBackground">#F2EDE3</item>
+        <item name="android:windowBackground">#F2EDE3</item>
+        <item name="android:textColorPrimary">#1B1712</item>
+        <item name="android:textColorSecondary">#6E6152</item>
+        <item name="android:colorAccent">#C2361B</item>
+        <item name="android:statusBarColor">#E8E1D4</item>
+        <item name="android:navigationBarColor">#E8E1D4</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>

@@ -10,10 +10,19 @@ import java.net.URL
 class AnthropicProvider : AiProvider {
     override val name = "anthropic"
 
-    override fun chat(apiKey: String, model: String, messages: List<ChatMessage>, onToken: (String) -> Unit, onDone: () -> Unit, onError: (String) -> Unit) {
+    override fun chat(
+        apiKey: String,
+        model: String,
+        messages: List<ChatMessage>,
+        onToken: (String) -> Unit,
+        onDone: () -> Unit,
+        onError: (String) -> Unit,
+        isCancelled: () -> Boolean
+    ) {
         Thread {
             var conn: HttpURLConnection? = null
             try {
+                if (isCancelled()) { onDone(); return@Thread }
                 val url = URL("https://api.anthropic.com/v1/messages")
                 conn = (url.openConnection() as HttpURLConnection).apply {
                     requestMethod = "POST"
@@ -24,7 +33,6 @@ class AnthropicProvider : AiProvider {
                     connectTimeout = 30000
                     readTimeout = 120000
                 }
-                // Separate system message
                 val system = messages.filter { it.role == "system" }.joinToString("\n") { it.content }
                 val arr = JSONArray()
                 messages.filter { it.role != "system" }.forEach { m ->
@@ -32,7 +40,7 @@ class AnthropicProvider : AiProvider {
                 }
                 val body = JSONObject().apply {
                     put("model", model.ifBlank { "claude-3-5-haiku-latest" })
-                    put("max_tokens", 4096)
+                    put("max_tokens", 8192)
                     put("stream", true)
                     if (system.isNotBlank()) put("system", system)
                     put("messages", arr)
@@ -47,6 +55,11 @@ class AnthropicProvider : AiProvider {
                 val reader = BufferedReader(conn.inputStream.reader())
                 var line: String?
                 while (reader.readLine().also { line = it } != null) {
+                    if (isCancelled()) {
+                        reader.close()
+                        onDone()
+                        return@Thread
+                    }
                     val l = line!!.trim()
                     if (!l.startsWith("data:")) continue
                     val data = l.removePrefix("data:").trim()
@@ -65,7 +78,7 @@ class AnthropicProvider : AiProvider {
                 reader.close()
                 onDone()
             } catch (e: Exception) {
-                onError(e.message ?: "Unknown error")
+                if (isCancelled()) onDone() else onError(e.message ?: "Unknown error")
             } finally {
                 conn?.disconnect()
             }

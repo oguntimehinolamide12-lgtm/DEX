@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- DEX semantic theme attributes: every layout/drawable reads these so the
+         whole app re-skins from one place. -->
+    <attr name="dexBg" format="color" />
+    <attr name="dexPanel" format="color" />
+    <attr name="dexPanelAlt" format="color" />
+    <attr name="dexLine" format="color" />
+    <attr name="dexText" format="color" />
+    <attr name="dexMuted" format="color" />
+    <attr name="dexAccent" format="color" />
+    <attr name="dexAccentAlt" format="color" />
+    <attr name="dexSulfur" format="color" />
+    <attr name="dexOk" format="color" />
+    <attr name="dexDanger" format="color" />
+    <attr name="dexTermBg" format="color" />
+</resources>

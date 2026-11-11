@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/void_black">
+
+    <!-- Pane header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="10dp"
+        android:paddingEnd="6dp"
+        android:background="@drawable/bg_bar">
+
+        <View
+            android:id="@+id/termPulse"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:background="@color/ember" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:text="TERM"
+            style="@style/DexLabel"
+            android:textColor="?attr/dexText" />
+
+        <TextView
+            android:id="@+id/tvCwd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="/root"
+            style="@style/DexLabel"
+            android:singleLine="true"
+            android:ellipsize="start" />
+
+        <Button
+            android:id="@+id/btnNewShell"
+            style="@style/DexKey"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:text="NEW" />
+
+        <Button
+            android:id="@+id/btnClearTerm"
+            style="@style/DexKey"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginStart="4dp"
+            android:text="CLR" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/dexLine" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.vibecode.app.linux.TerminalView
+            android:id="@+id/terminalView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/dexTermBg" />
+
+        <ScrollView
+            android:id="@+id/installPanel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/dexTermBg"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="22dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SUBSYSTEM / PRoot"
+                    style="@style/DexLabel"
+                    android:textColor="?attr/dexAccent" />
+
+                <TextView
+                    android:id="@+id/tvInstallTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Alpine Linux not installed"
+                    style="@style/DexTitle"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:id="@+id/tvInstallBody"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Downloads a statically linked proot and an Alpine minirootfs into this app, then opens a real Linux shell. No root, no Termux, no system install."
+                    style="@style/DexBody"
+                    android:textColor="?attr/dexMuted"
+                    android:textSize="12sp" />
+
+                <ProgressBar
+                    android:id="@+id/installProgress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_marginTop="16dp"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressTint="?attr/dexAccent"
+                    android:progressBackgroundTint="?attr/dexLine" />
+
+                <Button
+                    android:id="@+id/btnInstall"
+                    style="@style/DexKeyAccent"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="16dp"
+                    android:text="PROVISION LINUX" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="LINE-ORIENTED SHELL · apk, git, gcc, python, node all installable"
+                    style="@style/DexLabel"
+                    android:textSize="9sp" />
+            </LinearLayout>
+        </ScrollView>
+    </FrameLayout>
+
+    <!-- IME capture surface: invisible, keeps the custom renderer in charge -->
+    <EditText
+        android:id="@+id/hiddenInput"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:alpha="0"
+        android:inputType="textNoSuggestions|textVisiblePassword|textMultiLine"
+        android:imeOptions="flagNoExtractUi"
+        android:background="@android:color/transparent"
+        android:importantForAutofill="no" />
+
+    <!-- Direct keys: the row that makes a mobile terminal usable -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:background="@drawable/bg_bar"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp">
+
+            <Button android:id="@+id/keyEsc" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:text="ESC" />
+            <Button android:id="@+id/keyTab" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="3dp" android:text="TAB" />
+            <Button android:id="@+id/keyCtrl" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="3dp" android:text="CTRL" />
+            <Button android:id="@+id/keyInterrupt" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="3dp" android:text="^C" />
+
+            <View android:layout_width="1dp" android:layout_height="18dp" android:layout_marginStart="6dp" android:layout_marginEnd="6dp" android:background="?attr/dexLine" />
+
+            <Button android:id="@+id/keyUp" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:text="↑" />
+            <Button android:id="@+id/keyDown" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="3dp" android:text="↓" />
+            <Button android:id="@+id/keyLeft" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="3dp" android:text="←" />
+            <Button android:id="@+id/keyRight" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="3dp" android:text="→" />
+
+            <View android:layout_width="1dp" android:layout_height="18dp" android:layout_marginStart="6dp" android:layout_marginEnd="6dp" android:background="?attr/dexLine" />
+
+            <Button android:id="@+id/keyPipe" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:text="|" />
+            <Button android:id="@+id/keySlash" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="3dp" android:text="/" />
+            <Button android:id="@+id/keyDash" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="3dp" android:text="-" />
+            <Button android:id="@+id/keyTilde" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="3dp" android:text="~" />
+        </LinearLayout>
+    </HorizontalScrollView>
+</LinearLayout>

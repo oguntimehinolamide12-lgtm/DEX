@@ -15,10 +15,19 @@ class OpenAiProvider(private val baseUrl: String = "https://api.openai.com/v1") 
         return if (b.endsWith("/v1")) "$b/chat/completions" else "$b/v1/chat/completions"
     }
 
-    override fun chat(apiKey: String, model: String, messages: List<ChatMessage>, onToken: (String) -> Unit, onDone: () -> Unit, onError: (String) -> Unit) {
+    override fun chat(
+        apiKey: String,
+        model: String,
+        messages: List<ChatMessage>,
+        onToken: (String) -> Unit,
+        onDone: () -> Unit,
+        onError: (String) -> Unit,
+        isCancelled: () -> Boolean
+    ) {
         Thread {
             var conn: HttpURLConnection? = null
             try {
+                if (isCancelled()) { onDone(); return@Thread }
                 val url = URL(endpoint())
                 conn = (url.openConnection() as HttpURLConnection).apply {
                     requestMethod = "POST"
@@ -31,6 +40,7 @@ class OpenAiProvider(private val baseUrl: String = "https://api.openai.com/v1") 
                 val body = JSONObject().apply {
                     put("model", model.ifBlank { "gpt-4o-mini" })
                     put("stream", true)
+                    put("temperature", 0.2)
                     val arr = JSONArray()
                     messages.forEach { m ->
                         arr.put(JSONObject().apply { put("role", m.role); put("content", m.content) })
@@ -47,6 +57,11 @@ class OpenAiProvider(private val baseUrl: String = "https://api.openai.com/v1") 
                 val reader = BufferedReader(conn.inputStream.reader())
                 var line: String?
                 while (reader.readLine().also { line = it } != null) {
+                    if (isCancelled()) {
+                        reader.close()
+                        onDone()
+                        return@Thread
+                    }
                     val l = line!!.trim()
                     if (!l.startsWith("data:")) continue
                     val data = l.removePrefix("data:").trim()
@@ -63,7 +78,7 @@ class OpenAiProvider(private val baseUrl: String = "https://api.openai.com/v1") 
                 reader.close()
                 onDone()
             } catch (e: Exception) {
-                onError(e.message ?: "Unknown error")
+                if (isCancelled()) onDone() else onError(e.message ?: "Unknown error")
             } finally {
                 conn?.disconnect()
             }

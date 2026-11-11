@@ -23,8 +23,6 @@ object Prefs {
     fun setLastFolder(v: String) = sp.edit().putString("lastFolder", v).apply()
     fun recentFiles(): List<String> = (sp.getString("recentFiles", "") ?: "").split("|").filter { it.isNotBlank() }
 
-
-
     fun addRecentFile(path: String) {
         val list = recentFiles().toMutableList()
         list.remove(path)
@@ -32,9 +30,20 @@ object Prefs {
         sp.edit().putString("recentFiles", list.take(10).joinToString("|")).apply()
     }
 
+    /** Skins: "ember" (default), "acid", "paper". Legacy values are mapped. */
+    fun theme(): String {
+        val stored = sp.getString("theme", "ember") ?: "ember"
+        return when (stored) {
+            "dark", "monokai" -> if (stored == "monokai") "acid" else "ember"
+            "light" -> "paper"
+            "high_contrast" -> "acid"
+            "ember", "acid", "paper" -> stored
+            else -> "ember"
+        }
+    }
 
-    fun theme() = sp.getString("theme", "dark") ?: "dark"
     fun setTheme(v: String) = sp.edit().putString("theme", v).apply()
+
     fun fontFamily() = sp.getString("fontFamily", "monospace") ?: "monospace"
     fun setFontFamily(v: String) = sp.edit().putString("fontFamily", v).apply()
     fun fileAccess() = sp.getBoolean("fileAccess", true)
@@ -46,5 +55,21 @@ object Prefs {
     fun activeProfile() = sp.getString("activeProfile", "") ?: ""
     fun setActiveProfile(v: String) = sp.edit().putString("activeProfile", v).apply()
 
+    /** Home page of the embedded browser. */
+    fun browserHome() = sp.getString("browserHome", "https://developer.mozilla.org") ?: "https://developer.mozilla.org"
+    fun setBrowserHome(v: String) = sp.edit().putString("browserHome", v).apply()
 
+    /** How many tool round-trips a single agent request may take. */
+    fun agentSteps() = sp.getInt("agentSteps", 12).coerceIn(1, 40)
+    fun setAgentSteps(v: Int) = sp.edit().putInt("agentSteps", v.coerceIn(1, 40)).apply()
+
+    /** Cloud (SSH) workspace profiles, serialized as JSON. */
+    fun cloudProfilesJson() = sp.getString("cloudProfilesJson", "[]") ?: "[]"
+    fun setCloudProfilesJson(v: String) = sp.edit().putString("cloudProfilesJson", v).apply()
+    fun lastCloudProfile() = sp.getString("lastCloudProfile", "") ?: ""
+    fun setLastCloudProfile(v: String) = sp.edit().putString("lastCloudProfile", v).apply()
+
+    /** Which pane was visible last: "editor", "browser", "terminal" or "cloud". */
+    fun lastPane() = sp.getString("lastPane", "editor") ?: "editor"
+    fun setLastPane(v: String) = sp.edit().putString("lastPane", v).apply()
 }

@@ -5,23 +5,42 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.vibecode.app.R
-import com.vibecode.app.ai.AiAgent
+import com.vibecode.app.ai.AgentHost
+import com.vibecode.app.ai.AgentPrompt
+import com.vibecode.app.ai.AgentSession
 import com.vibecode.app.ai.ChatMessage
 import com.vibecode.app.databinding.FragmentAiBinding
-import com.vibecode.app.util.CurrentFile
-import com.vibecode.app.util.Prefs
-
 
 class AiChatFragment : Fragment() {
+
+    companion object {
+        private val LOGO = """
+              ____  _____  __  __
+             |  _ \| ____| \ \/ /
+             | | | |  _|    \  /
+             | |_| | |___   /  \
+             |____/|_____| /_/\_\
+
+            Hi, I'm DEX — your coding buddy.
+            I can read, edit and run your files, and drive the browser.
+        """.trimIndent()
+    }
+
     private var _binding: FragmentAiBinding? = null
     private val binding get() = _binding!!
     private val messages = mutableListOf<ChatMessage>()
     private val chat = mutableListOf<Pair<String, String>>()
     private lateinit var adapter: MsgAdapter
+    private var activeIndex = -1
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAiBinding.inflate(inflater, container, false)
@@ -34,158 +53,172 @@ class AiChatFragment : Fragment() {
         binding.chatRecycler.adapter = adapter
 
         if (chat.isEmpty()) {
-            val logo = """  ____  _____  __  __
- |  _ \| ____| \ \/ /
- | | | |  _|    \  /
- | |_| | |___   /  \
- |____/|_____| /_/\_\
- 
- Hi, I'm DEX — your coding buddy. Ask me anything!"""
-            chat.add("assistant" to logo)
+            chat.add("assistant" to LOGO)
             adapter.notifyItemInserted(0)
         }
 
         binding.btnSend.setOnClickListener { send() }
         binding.btnClear.setOnClickListener { clearChat() }
-        binding.inputMessage.setOnEditorActionListener { _, _, _ -> send(); true }
+        binding.btnStop.setOnClickListener { AgentSession.cancel() }
+        binding.inputMessage.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEND || actionId == EditorInfo.IME_ACTION_DONE) {
+                send(); true
+            } else false
+        }
+        syncRunningState()
     }
 
-    private var toolDepth = 0
+    private fun syncRunningState() {
+        val running = AgentSession.isRunning()
+        binding.btnSend.isEnabled = !running
+        binding.btnStop.visibility = if (running) View.VISIBLE else View.GONE
+        binding.inputMessage.isEnabled = true
+    }
 
     private fun send() {
-        val text = binding.inputMessage.text.toString().trim()
+        if (AgentSession.isRunning()) {
+            toast("DEX is still working — stop it first")
+            return
+        }
+        val text = binding.inputMessage.text?.toString()?.trim().orEmpty()
         if (text.isEmpty()) return
         binding.inputMessage.setText("")
         messages.add(ChatMessage("user", text))
         chat.add("user" to text)
         adapter.notifyItemInserted(chat.size - 1)
-        binding.chatRecycler.scrollToPosition(chat.size - 1)
-        toolDepth = 0
-        runChat()
+        scrollToEnd()
+        activeIndex = -1
+        runAgent()
     }
 
-    private fun runChat() {
-        val sys = buildSystem()
-        val full = mutableListOf<ChatMessage>()
-        if (sys.isNotBlank()) full.add(ChatMessage("system", sys))
-        full.addAll(messages)
+    private fun runAgent() {
+        val host = activity as? AgentHost
+        val appContext = context?.applicationContext
+        binding.btnSend.isEnabled = false
+        binding.btnStop.visibility = View.VISIBLE
+        (activity as? com.vibecode.app.MainActivity)?.setAgentBusy(true)
 
-        chat.add("assistant" to "")
-        val idx = chat.size - 1
-        adapter.notifyItemInserted(idx)
-        binding.chatRecycler.scrollToPosition(idx)
+        AgentSession.start(messages, AgentPrompt.build(), host, appContext, object : AgentSession.Listener {
+            override fun onDelta(text: String) = post { showStreaming(text) }
 
-        val sb = StringBuilder()
-        AiAgent.chat(full, { token ->
-            activity?.runOnUiThread {
-                sb.append(token)
-                chat[idx] = "assistant" to sb.toString()
-                adapter.notifyItemChanged(idx)
-                binding.chatRecycler.scrollToPosition(idx)
+            override fun onAssistantDone(text: String) = post { finalizeAssistant(text) }
+
+            override fun onToolStart(name: String, summary: String) = post {
+                val detail = if (summary.isBlank()) name else "$name  $summary"
+                addLine("tool", "⚙  $detail")
             }
-        }, {
-            activity?.runOnUiThread {
-                val reply = sb.toString()
-                messages.add(ChatMessage("assistant", reply))
-                val readMatch = Regex("\\[\\[READ_FILE:(.+?)\\]\\]").find(reply)
-                val writeMatch = Regex("\\[\\[WRITE_FILE:(.+?)\\]\\]").find(reply)
-                val openMatch = Regex("\\[\\[OPEN_FILE:(.+?)\\]\\]").find(reply)
-                val applyMatch = Regex("\\[\\[APPLY_EDITOR\\]\\]").find(reply)
-                if (readMatch != null && Prefs.fileAccess() && toolDepth < 3) {
-                    toolDepth++
-                    val path = readMatch.groupValues[1].trim()
-                    val content = try { java.io.File(path).readText().take(8000) } catch (e: Exception) { "Error reading file: ${e.message}" }
-                    chat[idx] = "assistant" to "Read $path"
-                    adapter.notifyItemChanged(idx)
-                    messages.add(ChatMessage("user", "Tool result for $path:\n```\n$content\n```"))
-                    runChat()
-                } else if (writeMatch != null && Prefs.fileAccess() && toolDepth < 3) {
-                    toolDepth++
-                    val path = writeMatch.groupValues[1].trim()
-                    val codeMatch = Regex("```[a-zA-Z0-9]*\n([\\s\\S]*?)```").find(reply.substring(writeMatch.range.last))
-                    val content = codeMatch?.groupValues?.get(1) ?: ""
-                    val ok = try {
-                        val f = java.io.File(path)
-                        f.parentFile?.mkdirs()
-                        f.writeText(content)
-                        true
-                    } catch (e: Exception) { false }
-                    chat[idx] = "assistant" to (if (ok) "Wrote $path" else "Failed to write $path")
-                    adapter.notifyItemChanged(idx)
-                    messages.add(ChatMessage("user", "Tool result: ${if (ok) "Successfully wrote $path" else "Error writing $path"}"))
-                    runChat()
-                } else if (openMatch != null && Prefs.fileAccess() && toolDepth < 3) {
-                    toolDepth++
-                    val path = openMatch.groupValues[1].trim()
-                    try {
-                        (activity as? com.vibecode.app.MainActivity)?.openFileInEditor(java.io.File(path))
-                        chat[idx] = "assistant" to "Opened $path"
-                    } catch (e: Exception) {
-                        chat[idx] = "assistant" to "Failed to open $path"
-                    }
-                    adapter.notifyItemChanged(idx)
-                    messages.add(ChatMessage("user", "Tool result: opened $path"))
-                    runChat()
-                } else if (applyMatch != null && toolDepth < 3) {
-                    toolDepth++
-                    val code = extractCode(reply)
-                    (activity as? com.vibecode.app.MainActivity)?.applyToEditor(code)
-                    chat[idx] = "assistant" to "Applied to editor"
-                    adapter.notifyItemChanged(idx)
-                    messages.add(ChatMessage("user", "Tool result: applied code to editor"))
-                    runChat()
+
+            override fun onToolResult(name: String, summary: String, ok: Boolean, output: String) = post {
+                if (ok) {
+                    addLine("tool", "   ↳ ok")
                 } else {
-                    chat[idx] = "assistant" to reply
-                    adapter.notifyItemChanged(idx)
+                    val first = output.lineSequence().firstOrNull { it.isNotBlank() } ?: "failed"
+                    addLine("error", "✗  $name: ${first.take(160)}")
                 }
             }
-        }, { err ->
-            activity?.runOnUiThread {
-                chat[idx] = "assistant" to "Error: $err"
-                adapter.notifyItemChanged(idx)
+
+            override fun onError(message: String) = post {
+                activeIndex = -1
+                addLine("error", "✗  $message")
+                (activity as? com.vibecode.app.MainActivity)?.setAgentBusy(false)
+                syncRunningState()
+            }
+
+            override fun onFinished(stopped: Boolean) = post {
+                activeIndex = -1
+                if (stopped) addLine("tool", "⏹  stopped")
+                (activity as? com.vibecode.app.MainActivity)?.setAgentBusy(false)
+                syncRunningState()
             }
         })
     }
 
-    private fun buildSystem(): String {
-        val cf = CurrentFile
-        val base = if (cf.content.isBlank()) "You are DEX, a friendly, witty, and helpful coding assistant inside a mobile code editor. Answer concisely." else "You are DEX, a friendly, witty, and helpful coding assistant inside a mobile code editor. The user is editing file: ${cf.path}. Current file content:\n```\n${cf.content.take(8000)}\n```\nAnswer concisely and provide code when useful."
-        if (!Prefs.fileAccess()) return base
-        val folder = Prefs.lastFolder()
-        if (folder.isBlank()) return base
-        val files = try {
-            val d = java.io.File(folder)
-            if (d.isDirectory) d.listFiles()?.map { it.name }?.take(80) else null
-        } catch (_: Exception) { null }
-        if (files.isNullOrEmpty()) return base
-        return base + "\n\nDevice file access is enabled. Current folder: $folder\nFiles: ${files.joinToString(", ")}\n\nTools: to read a file, output [[READ_FILE:<absolute path>]]. To write a file, output [[WRITE_FILE:<absolute path>]] followed by a code block with the content. To open a file in the editor, output [[OPEN_FILE:<absolute path>]]. To apply a code block to the current editor buffer, output [[APPLY_EDITOR]] before the code block. Use only paths from the listed files or the currently open file."
+    private fun showStreaming(raw: String) {
+        val text = visibleText(raw)
+        if (text.isBlank() && activeIndex < 0) return
+        if (activeIndex < 0) {
+            chat.add("assistant" to text)
+            activeIndex = chat.size - 1
+            adapter.notifyItemInserted(activeIndex)
+        } else {
+            chat[activeIndex] = "assistant" to text
+            adapter.notifyItemChanged(activeIndex)
+        }
+        scrollToEnd()
     }
 
+    private fun finalizeAssistant(raw: String) {
+        val text = visibleText(raw)
+        if (text.isBlank()) {
+            if (activeIndex >= 0) {
+                chat.removeAt(activeIndex)
+                adapter.notifyItemRemoved(activeIndex)
+                activeIndex = -1
+            }
+            return
+        }
+        if (activeIndex < 0) {
+            chat.add("assistant" to text)
+            activeIndex = chat.size - 1
+            adapter.notifyItemInserted(activeIndex)
+        } else {
+            chat[activeIndex] = "assistant" to text
+            adapter.notifyItemChanged(activeIndex)
+        }
+        activeIndex = -1
+        scrollToEnd()
+    }
+
+    private fun addLine(role: String, text: String) {
+        chat.add(role to text)
+        adapter.notifyItemInserted(chat.size - 1)
+        scrollToEnd()
+    }
+
+    private fun scrollToEnd() {
+        if (chat.isNotEmpty()) binding.chatRecycler.scrollToPosition(chat.size - 1)
+    }
+
+    /** Tool JSON is plumbing, not conversation: hide it from the transcript. */
+    private fun visibleText(raw: String): String =
+        raw.replace(Regex("<tool>[\\s\\S]*?</tool>", RegexOption.IGNORE_CASE), "").trim()
+
     private fun clearChat() {
+        AgentSession.cancel()
         messages.clear()
         chat.clear()
         adapter.notifyDataSetChanged()
-        val logo = """  ____  _____  __  __
- |  _ \| ____| \ \/ /
- | | | |  _|    \  /
- | |_| | |___   /  \
- |____/|_____| /_/\_\
- 
- Hi, I'm DEX — your coding buddy. Ask me anything!"""
-        chat.add("assistant" to logo)
+        activeIndex = -1
+        chat.add("assistant" to LOGO)
         adapter.notifyItemInserted(0)
+        syncRunningState()
     }
 
     private fun applyToEditor(text: String) {
         val code = extractCode(text)
-        (activity as? com.vibecode.app.MainActivity)?.applyToEditor(code)
-        android.widget.Toast.makeText(requireContext(), "Applied to editor", android.widget.Toast.LENGTH_SHORT).show()
+        val host = activity as? AgentHost
+        if (host == null) {
+            toast("Editor is not available")
+            return
+        }
+        host.applyToEditor(code)
+        toast("Applied to editor")
     }
 
     private fun extractCode(text: String): String {
-        val fence = Regex("```[a-zA-Z0-9]*\\n([\\s\\S]*?)```")
-        val m = fence.find(text)
-        return m?.groupValues?.get(1)?.trim() ?: text
+        val fence = Regex("```[a-zA-Z0-9+#-]*\\n([\\s\\S]*?)```")
+        return fence.find(text)?.groupValues?.get(1)?.trimEnd() ?: text
+    }
+
+    private fun post(block: () -> Unit) {
+        val act = activity ?: return
+        act.runOnUiThread {
+            if (isAdded && _binding != null) block()
+        }
+    }
+
+    private fun toast(message: String) {
+        android.widget.Toast.makeText(requireContext(), message, android.widget.Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
@@ -194,31 +227,55 @@ class AiChatFragment : Fragment() {
     }
 
     class MsgAdapter(private val items: List<Pair<String, String>>, private val onApply: (String) -> Unit) :
-        androidx.recyclerview.widget.RecyclerView.Adapter<MsgAdapter.VH>() {
-        class VH(val root: android.view.View, val tv: android.widget.TextView, val btn: android.widget.Button) : androidx.recyclerview.widget.RecyclerView.ViewHolder(root)
+        RecyclerView.Adapter<MsgAdapter.VH>() {
+        class VH(val root: View, val tv: TextView, val btn: Button) : RecyclerView.ViewHolder(root)
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
             val root = LayoutInflater.from(parent.context).inflate(R.layout.item_message, parent, false)
             val tv = root.findViewById<TextView>(R.id.messageText)
-            val btn = root.findViewById<android.widget.Button>(R.id.btnApply)
+            val btn = root.findViewById<Button>(R.id.btnApply)
             return VH(root, tv, btn)
         }
+
         override fun getItemCount() = items.size
+
         override fun onBindViewHolder(holder: VH, position: Int) {
             val (role, text) = items[position]
+            val context = holder.root.context
             holder.tv.text = text.ifEmpty { "…" }
-            if (role == "user") {
-                holder.tv.setBackgroundResource(R.drawable.bubble_user)
-                holder.tv.gravity = Gravity.START
-                (holder.root as? android.widget.LinearLayout)?.gravity = Gravity.END
-                holder.btn.visibility = View.GONE
-            } else {
-                holder.tv.setBackgroundResource(R.drawable.bubble_assistant)
-                holder.tv.gravity = Gravity.START
-                (holder.root as? android.widget.LinearLayout)?.gravity = Gravity.START
-                if (text.isNotBlank() && text != "…") {
-                    holder.btn.visibility = View.VISIBLE
-                    holder.btn.setOnClickListener { onApply(text) }
-                } else holder.btn.visibility = View.GONE
+            holder.tv.textSize = if (role == "tool" || role == "error") 11f else 14f
+            val layout = holder.root as? LinearLayout
+            when (role) {
+                "user" -> {
+                    holder.tv.setBackgroundResource(R.drawable.bg_user)
+                    holder.tv.setTextColor(ContextCompat.getColor(context, R.color.bone))
+                    holder.tv.gravity = Gravity.START
+                    layout?.gravity = Gravity.END
+                    holder.btn.visibility = View.GONE
+                }
+                "tool" -> {
+                    holder.tv.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                    holder.tv.setTextColor(ContextCompat.getColor(context, R.color.line_number))
+                    holder.tv.gravity = Gravity.START
+                    layout?.gravity = Gravity.START
+                    holder.btn.visibility = View.GONE
+                }
+                "error" -> {
+                    holder.tv.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                    holder.tv.setTextColor(ContextCompat.getColor(context, R.color.magma))
+                    holder.tv.gravity = Gravity.START
+                    layout?.gravity = Gravity.START
+                    holder.btn.visibility = View.GONE
+                }
+                else -> {
+                    holder.tv.setBackgroundResource(R.drawable.bg_assistant)
+                    holder.tv.setTextColor(ContextCompat.getColor(context, R.color.bone))
+                    holder.tv.gravity = Gravity.START
+                    layout?.gravity = Gravity.START
+                    val hasCode = text.contains("```")
+                    holder.btn.visibility = if (hasCode) View.VISIBLE else View.GONE
+                    if (hasCode) holder.btn.setOnClickListener { onApply(text) }
+                }
             }
         }
     }

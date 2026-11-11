@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Micro label: uppercase, wide tracking, muted. -->
+    <style name="DexLabel" parent="">
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.16</item>
+        <item name="android:textColor">?attr/dexMuted</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <!-- Panel title. -->
+    <style name="DexTitle" parent="">
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.08</item>
+        <item name="android:textColor">?attr/dexText</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="DexBody" parent="">
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">?attr/dexText</item>
+    </style>
+
+    <style name="DexInput" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/bg_input</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">?attr/dexText</item>
+        <item name="android:textColorHint">?attr/dexMuted</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingTop">7dp</item>
+        <item name="android:paddingBottom">7dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:textCursorDrawable">@null</item>
+    </style>
+
+    <style name="DexKey" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@drawable/bg_key</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/dexText</item>
+        <item name="android:letterSpacing">0.08</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:paddingStart">7dp</item>
+        <item name="android:paddingEnd">7dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="DexKeyAccent" parent="DexKey">
+        <item name="android:background">@drawable/bg_key_accent</item>
+        <item name="android:textColor">?attr/dexBg</item>
+    </style>
+
+    <style name="DexRailKey" parent="">
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">?attr/dexMuted</item>
+    </style>
+</resources>

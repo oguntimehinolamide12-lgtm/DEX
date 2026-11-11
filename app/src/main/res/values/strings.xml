@@ -15,4 +15,6 @@
     <string name="file_saved">File saved</string>
     <string name="error">Error</string>
     <string name="permission_needed">Storage permission needed</string>
+    <string name="agent_stop">Stop agent</string>
+    <string name="agent_clear">Clear chat</string>
 </resources>
