@@ -14,11 +14,11 @@
         android:paddingEnd="4dp"
         android:background="@drawable/bg_bar">
 
-        <Button android:id="@+id/btnBack" style="@style/DexKey" android:layout_width="28dp" android:layout_height="24dp" android:text="‹" android:textSize="15sp" />
-        <Button android:id="@+id/btnForward" style="@style/DexKey" android:layout_width="28dp" android:layout_height="24dp" android:layout_marginStart="2dp" android:text="›" android:textSize="15sp" />
-        <Button android:id="@+id/btnReload" style="@style/DexKey" android:layout_width="28dp" android:layout_height="24dp" android:layout_marginStart="2dp" android:text="↻" android:textSize="12sp" />
-        <Button android:id="@+id/btnHome" style="@style/DexKey" android:layout_width="28dp" android:layout_height="24dp" android:layout_marginStart="2dp" android:text="⌂" android:textSize="12sp" />
-        <Button android:id="@+id/btnStop" style="@style/DexKey" android:layout_width="28dp" android:layout_height="24dp" android:layout_marginStart="2dp" android:text="×" android:textSize="13sp" />
+        <ImageButton android:id="@+id/btnBack" style="@style/DexKey" android:layout_width="30dp" android:layout_height="26dp" android:src="@drawable/ic_back" android:scaleType="centerInside" android:padding="5dp" android:tint="?attr/dexMuted" android:contentDescription="Back" />
+        <ImageButton android:id="@+id/btnForward" style="@style/DexKey" android:layout_width="30dp" android:layout_height="26dp" android:layout_marginStart="2dp" android:src="@drawable/ic_forward" android:scaleType="centerInside" android:padding="5dp" android:tint="?attr/dexMuted" android:contentDescription="Forward" />
+        <ImageButton android:id="@+id/btnReload" style="@style/DexKey" android:layout_width="30dp" android:layout_height="26dp" android:layout_marginStart="2dp" android:src="@drawable/ic_refresh" android:scaleType="centerInside" android:padding="5dp" android:tint="?attr/dexMuted" android:contentDescription="Reload" />
+        <ImageButton android:id="@+id/btnHome" style="@style/DexKey" android:layout_width="30dp" android:layout_height="26dp" android:layout_marginStart="2dp" android:src="@drawable/ic_home" android:scaleType="centerInside" android:padding="5dp" android:tint="?attr/dexMuted" android:contentDescription="Home" />
+        <ImageButton android:id="@+id/btnStop" style="@style/DexKey" android:layout_width="30dp" android:layout_height="26dp" android:layout_marginStart="2dp" android:src="@drawable/ic_close" android:scaleType="centerInside" android:padding="5dp" android:tint="?attr/dexMuted" android:contentDescription="Stop" />
 
         <EditText
             android:id="@+id/etUrl"

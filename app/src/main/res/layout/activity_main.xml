@@ -8,28 +8,28 @@
     <!-- ============================ TOP DECK ============================ -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="48dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingStart="10dp"
-        android:paddingEnd="6dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="8dp"
         android:background="@drawable/bg_bar">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="▚"
-            android:textSize="18sp"
-            android:textColor="?attr/dexAccent" />
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_launcher_foreground"
+            android:scaleType="centerCrop"
+            android:contentDescription="DEX" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
+            android:layout_marginStart="8dp"
             android:text="DEX"
             style="@style/DexTitle"
-            android:textSize="16sp"
-            android:letterSpacing="0.32" />
+            android:textSize="15sp"
+            android:letterSpacing="0.28" />
 
         <View
             android:layout_width="1dp"
@@ -63,13 +63,16 @@
             style="@style/DexLabel"
             android:layout_marginEnd="8dp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnMenu"
             style="@style/DexKey"
-            android:layout_width="30dp"
-            android:layout_height="26dp"
-            android:text="≡"
-            android:textSize="14sp" />
+            android:layout_width="32dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_menu"
+            android:scaleType="centerInside"
+            android:padding="6dp"
+            android:tint="?attr/dexMuted"
+            android:contentDescription="Menu" />
     </LinearLayout>
 
     <View
@@ -88,18 +91,18 @@
         <!-- rail -->
         <LinearLayout
             android:id="@+id/rail"
-            android:layout_width="46dp"
+            android:layout_width="48dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:background="@drawable/bg_bar"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp">
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp">
 
-            <TextView android:id="@+id/railFiles" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="44dp" android:text="FL" />
-            <TextView android:id="@+id/railEditor" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="44dp" android:text="ED" />
-            <TextView android:id="@+id/railBrowser" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="44dp" android:text="WB" />
-            <TextView android:id="@+id/railTerminal" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="44dp" android:text="TM" />
-            <TextView android:id="@+id/railCloud" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="44dp" android:text="CL" />
+            <TextView android:id="@+id/railFiles" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="46dp" android:text="" android:drawableTop="@drawable/ic_nav_files" android:paddingTop="11dp" android:contentDescription="Files" />
+            <TextView android:id="@+id/railEditor" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="46dp" android:text="" android:drawableTop="@drawable/ic_nav_editor" android:paddingTop="11dp" android:contentDescription="Editor" />
+            <TextView android:id="@+id/railBrowser" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="46dp" android:text="" android:drawableTop="@drawable/ic_nav_browser" android:paddingTop="11dp" android:contentDescription="Browser" />
+            <TextView android:id="@+id/railTerminal" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="46dp" android:text="" android:drawableTop="@drawable/ic_nav_terminal" android:paddingTop="11dp" android:contentDescription="Terminal" />
+            <TextView android:id="@+id/railCloud" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="46dp" android:text="" android:drawableTop="@drawable/ic_nav_cloud" android:paddingTop="11dp" android:contentDescription="Cloud" />
 
             <View
                 android:layout_width="match_parent"
@@ -110,22 +113,20 @@
                 android:layout_marginBottom="4dp"
                 android:background="?attr/dexLine" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingTop="4dp"
-                android:text="ROOT"
-                style="@style/DexLabel"
-                android:textSize="7sp"
-                android:letterSpacing="0.3" />
+            <View
+                android:layout_width="16dp"
+                android:layout_height="2dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="6dp"
+                android:background="?attr/dexAccent"
+                android:alpha="0.25" />
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <TextView android:id="@+id/railAgent" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="44dp" android:text="AI" />
+            <TextView android:id="@+id/railAgent" style="@style/DexRailKey" android:layout_width="match_parent" android:layout_height="46dp" android:text="" android:drawableTop="@drawable/ic_nav_agent" android:paddingTop="11dp" android:contentDescription="Agent" />
         </LinearLayout>
 
         <View
@@ -158,9 +159,9 @@
                     style="@style/DexLabel"
                     android:textColor="?attr/dexText" />
 
-                <Button android:id="@+id/btnOpenFolder" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="22dp" android:text="OPEN" android:textSize="9sp" />
-                <Button android:id="@+id/btnNewFile" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="22dp" android:layout_marginStart="3dp" android:text="+" android:textSize="11sp" />
-                <Button android:id="@+id/btnRecent" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="22dp" android:layout_marginStart="3dp" android:text="~" android:textSize="11sp" />
+                <ImageButton android:id="@+id/btnOpenFolder" style="@style/DexKey" android:layout_width="28dp" android:layout_height="24dp" android:src="@drawable/ic_folder_open" android:scaleType="centerInside" android:padding="4dp" android:tint="?attr/dexMuted" android:contentDescription="Open folder" />
+                <ImageButton android:id="@+id/btnNewFile" style="@style/DexKey" android:layout_width="28dp" android:layout_height="24dp" android:layout_marginStart="3dp" android:src="@drawable/ic_add" android:scaleType="centerInside" android:padding="4dp" android:tint="?attr/dexMuted" android:contentDescription="New file" />
+                <ImageButton android:id="@+id/btnRecent" style="@style/DexKey" android:layout_width="28dp" android:layout_height="24dp" android:layout_marginStart="3dp" android:src="@drawable/ic_history" android:scaleType="centerInside" android:padding="4dp" android:tint="?attr/dexMuted" android:contentDescription="Recent" />
             </LinearLayout>
 
             <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/dexLine" />

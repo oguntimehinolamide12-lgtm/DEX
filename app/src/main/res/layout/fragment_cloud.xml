@@ -38,12 +38,16 @@
             android:ellipsize="middle"
             android:text="OFFLINE" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnDisconnect"
             style="@style/DexKey"
-            android:layout_width="wrap_content"
+            android:layout_width="28dp"
             android:layout_height="24dp"
-            android:text="DROP"
+            android:src="@drawable/ic_disconnect"
+            android:scaleType="centerInside"
+            android:padding="4dp"
+            android:tint="?attr/dexDanger"
+            android:contentDescription="Disconnect"
             android:visibility="gone" />
     </LinearLayout>
 
@@ -98,8 +102,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
 
-                    <Button android:id="@+id/btnSaveProfile" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="4dp" android:text="SAVE" />
-                    <Button android:id="@+id/btnDeleteProfile" style="@style/DexKey" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginStart="4dp" android:text="DEL" />
+                    <ImageButton android:id="@+id/btnSaveProfile" style="@style/DexKey" android:layout_width="30dp" android:layout_height="26dp" android:layout_marginStart="4dp" android:src="@drawable/ic_save" android:scaleType="centerInside" android:padding="5dp" android:tint="?attr/dexMuted" android:contentDescription="Save profile" />
+                    <ImageButton android:id="@+id/btnDeleteProfile" style="@style/DexKey" android:layout_width="30dp" android:layout_height="26dp" android:layout_marginStart="4dp" android:src="@drawable/ic_clear" android:scaleType="centerInside" android:padding="5dp" android:tint="?attr/dexMuted" android:contentDescription="Delete profile" />
                 </LinearLayout>
 
                 <EditText android:id="@+id/etCloudName" style="@style/DexInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:hint="profile name (e.g. codespace-web)" />

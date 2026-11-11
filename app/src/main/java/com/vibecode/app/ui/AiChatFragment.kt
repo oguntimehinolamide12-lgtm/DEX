@@ -110,10 +110,18 @@ class AiChatFragment : Fragment() {
 
             override fun onToolResult(name: String, summary: String, ok: Boolean, output: String) = post {
                 if (ok) {
-                    addLine("tool", "   ↳ ok")
+                    val preview = output.lineSequence()
+                        .map { it.trimEnd() }
+                        .filter { it.isNotBlank() }
+                        .take(if (name in setOf("run", "shell", "remote_run", "cloud_run", "write_file", "edit_file")) 6 else 2)
+                        .joinToString("\n")
+                        .take(360)
+                    val quiet = name in setOf("list_dir", "read_file", "skill", "skills", "open_file", "apply_to_editor", "browser_open")
+                    val detail = if (preview.isNotBlank() && !quiet) "   ↳ ok\n$preview" else "   ↳ ok"
+                    addLine("tool", detail)
                 } else {
-                    val first = output.lineSequence().firstOrNull { it.isNotBlank() } ?: "failed"
-                    addLine("error", "✗  $name: ${first.take(160)}")
+                    val first = output.lineSequence().filter { it.isNotBlank() }.take(3).joinToString(" | ").take(220).ifBlank { "failed" }
+                    addLine("error", "✗  $name: $first")
                 }
             }
 

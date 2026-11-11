@@ -183,8 +183,10 @@ class MainActivity : AppCompatActivity(), AgentHost {
         val muted = attrColor(R.attr.dexMuted, 0xFF8B7C92.toInt())
 
         fun style(view: TextView, active: Boolean) {
-            view.setTextColor(if (active) accent else muted)
+            val color = if (active) accent else muted
+            view.setTextColor(color)
             view.setBackgroundResource(if (active) R.drawable.bg_rail_active else R.drawable.bg_rail_item)
+            view.compoundDrawablesRelative.forEach { d -> d?.mutate()?.setTint(color) }
         }
 
         style(binding.railEditor, pane == Pane.EDITOR)

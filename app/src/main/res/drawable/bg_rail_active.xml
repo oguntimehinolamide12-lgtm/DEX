@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
-        <shape android:shape="rectangle">
-            <solid android:color="?attr/dexPanel" />
-        </shape>
+        <shape android:shape="rectangle"><solid android:color="?attr/dexPanelAlt"/></shape>
     </item>
-    <item android:width="2dp" android:gravity="left">
-        <shape android:shape="rectangle">
-            <solid android:color="?attr/dexAccent" />
-        </shape>
+    <item android:width="3dp" android:gravity="left">
+        <shape android:shape="rectangle"><solid android:color="?attr/dexAccent"/><corners android:radius="2dp"/></shape>
     </item>
 </layer-list>

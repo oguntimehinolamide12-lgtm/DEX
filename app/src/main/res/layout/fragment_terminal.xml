@@ -40,20 +40,28 @@
             android:singleLine="true"
             android:ellipsize="start" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnNewShell"
             style="@style/DexKey"
-            android:layout_width="wrap_content"
+            android:layout_width="28dp"
             android:layout_height="24dp"
-            android:text="NEW" />
+            android:src="@drawable/ic_refresh"
+            android:scaleType="centerInside"
+            android:padding="4dp"
+            android:tint="?attr/dexMuted"
+            android:contentDescription="New shell" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnClearTerm"
             style="@style/DexKey"
-            android:layout_width="wrap_content"
+            android:layout_width="28dp"
             android:layout_height="24dp"
             android:layout_marginStart="4dp"
-            android:text="CLR" />
+            android:src="@drawable/ic_clear"
+            android:scaleType="centerInside"
+            android:padding="4dp"
+            android:tint="?attr/dexMuted"
+            android:contentDescription="Clear terminal" />
     </LinearLayout>
 
     <View

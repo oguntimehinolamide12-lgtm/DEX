@@ -32,21 +32,29 @@
             style="@style/DexLabel"
             android:textSize="9sp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnStop"
             style="@style/DexKey"
-            android:layout_width="wrap_content"
+            android:layout_width="28dp"
             android:layout_height="24dp"
-            android:text="STOP"
+            android:src="@drawable/ic_stop"
+            android:scaleType="centerInside"
+            android:padding="4dp"
+            android:tint="?attr/dexDanger"
+            android:contentDescription="Stop"
             android:visibility="gone" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnClear"
             style="@style/DexKey"
-            android:layout_width="wrap_content"
+            android:layout_width="28dp"
             android:layout_height="24dp"
             android:layout_marginStart="4dp"
-            android:text="CLR" />
+            android:src="@drawable/ic_clear"
+            android:scaleType="centerInside"
+            android:padding="4dp"
+            android:tint="?attr/dexMuted"
+            android:contentDescription="Clear" />
     </LinearLayout>
 
     <View
@@ -99,13 +107,16 @@
             android:maxLines="4"
             android:imeOptions="actionSend" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnSend"
             style="@style/DexKeyAccent"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:layout_marginStart="5dp"
-            android:text="↵"
-            android:textSize="16sp" />
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="6dp"
+            android:src="@drawable/ic_send"
+            android:scaleType="centerInside"
+            android:padding="10dp"
+            android:tint="?attr/dexBg"
+            android:contentDescription="Send" />
     </LinearLayout>
 </LinearLayout>

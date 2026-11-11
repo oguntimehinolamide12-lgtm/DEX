@@ -50,12 +50,16 @@
             android:layout_marginEnd="6dp"
             android:visibility="gone" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnSave"
             style="@style/DexKey"
-            android:layout_width="wrap_content"
+            android:layout_width="28dp"
             android:layout_height="24dp"
-            android:text="SAVE" />
+            android:src="@drawable/ic_save"
+            android:scaleType="centerInside"
+            android:padding="4dp"
+            android:tint="?attr/dexAccent"
+            android:contentDescription="Save" />
     </LinearLayout>
 
     <View

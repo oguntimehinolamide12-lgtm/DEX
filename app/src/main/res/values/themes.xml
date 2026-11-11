@@ -2,31 +2,31 @@
 <resources>
     <!-- ============================ EMBER (default) ============================ -->
     <style name="Theme.Dex" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="dexBg">#07050A</item>
-        <item name="dexPanel">#0F0B13</item>
-        <item name="dexPanelAlt">#191220</item>
-        <item name="dexLine">#2B2135</item>
+        <item name="dexBg">#050308</item>
+        <item name="dexPanel">#0C0911</item>
+        <item name="dexPanelAlt">#16101C</item>
+        <item name="dexLine">#261D2F</item>
         <item name="dexText">#F3EADF</item>
-        <item name="dexMuted">#8B7C92</item>
+        <item name="dexMuted">#7A6A84</item>
         <item name="dexAccent">#FF5A1F</item>
         <item name="dexAccentAlt">#FF2E88</item>
         <item name="dexSulfur">#FFC24B</item>
         <item name="dexOk">#5CE1A0</item>
         <item name="dexDanger">#FF4D4D</item>
-        <item name="dexTermBg">#08060B</item>
+        <item name="dexTermBg">#040206</item>
 
         <item name="colorPrimary">#FF5A1F</item>
         <item name="colorOnPrimary">#0B070C</item>
         <item name="colorSecondary">#FF2E88</item>
         <item name="colorSurface">#0F0B13</item>
         <item name="colorOnSurface">#F3EADF</item>
-        <item name="android:colorBackground">#07050A</item>
-        <item name="android:windowBackground">#07050A</item>
+        <item name="android:colorBackground">#050308</item>
+        <item name="android:windowBackground">#050308</item>
         <item name="android:textColorPrimary">#F3EADF</item>
         <item name="android:textColorSecondary">#8B7C92</item>
         <item name="android:textColorHint">#6B5D72</item>
-        <item name="android:statusBarColor">#07050A</item>
-        <item name="android:navigationBarColor">#07050A</item>
+        <item name="android:statusBarColor">#050308</item>
+        <item name="android:navigationBarColor">#050308</item>
         <item name="android:colorAccent">#FF5A1F</item>
     </style>
 
